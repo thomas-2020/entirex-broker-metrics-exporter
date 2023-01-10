@@ -3,11 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.softwareag.exx</groupId>
-  <artifactId>entirex-broker-metrics-server</artifactId>
+  <artifactId>entirex-broker-metrics-exporter</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>entirex-broker-metrics-server</name>
+  <name>entirex-broker-metrics-exporter</name>
   <url>http://maven.apache.org</url>
 
   <properties>
