@@ -28,13 +28,20 @@ public class BrokerDataCollector {
 
 	private Gauge nServiceRequests;
 	private Gauge nServiceServer;
+	private Gauge nServiceConvHigh;
+	private Gauge nServiceConvPending;
+	private Gauge nServiceConvPendingHigh;
 
 	@PostConstruct
 	private void init() {
 		try {
-			String labelPrefix = "sag_etb_";
-			nServiceRequests = Gauge.build().name( labelPrefix + "service_requests" ).help( "Current number of service requests" ) .labelNames( "BrokerID", "Service" ).register();
-			nServiceServer   = Gauge.build().name( labelPrefix + "active_servers"   ).help( "Current number of servers"          ) .labelNames( "BrokerID", "Service" ).register();
+			String labelPrefix      = "sag_etb_";
+			nServiceRequests        = Gauge.build().name( labelPrefix + "service_requests"  ).help( "Current number of service requests" ) .labelNames( "BrokerID", "Service" ).register();
+			nServiceServer          = Gauge.build().name( labelPrefix + "active_servers"    ).help( "Current number of servers"          ) .labelNames( "BrokerID", "Service" ).register();
+			nServiceConvHigh        = Gauge.build().name( labelPrefix + "conv_high"         ).help( "Conversation high"                  ) .labelNames( "BrokerID", "Service" ).register();
+			nServiceConvPending     = Gauge.build().name( labelPrefix + "conv_pending"      ).help( "Conversation pending"               ) .labelNames( "BrokerID", "Service" ).register();
+			nServiceConvPendingHigh = Gauge.build().name( labelPrefix + "conv_pending_high" ).help( "Conversation pending high"          ) .labelNames( "BrokerID", "Service" ).register();
+			
 		}
 		catch ( Throwable e ) {
 			logger.error( "On DataCollector init: ", e );
@@ -72,12 +79,15 @@ public class BrokerDataCollector {
 		IServiceResponse    res = req.sendReceive();
 		for ( int i = 0; i < res.getCommonHeader().getCurrentNumObjects(); i++ ) {
 			ServiceObject so = (ServiceObject) res.getServiceResponseObject( i );
-			nServiceRequests.labels( broker.getBrokerID(), printServiceName( so.getServerClass(), so.getService(), so.getServerName() ) ).set( so.getRequests() );
-			nServiceServer.labels  ( broker.getBrokerID(), printServiceName( so.getServerClass(), so.getService(), so.getServerName() ) ).set( so.getServerAct() );
+			nServiceRequests.labels         ( broker.getBrokerID(), printServiceName( so.getServerClass(), so.getService(), so.getServerName() ) ).set( so.getRequests() );
+			nServiceServer.labels           ( broker.getBrokerID(), printServiceName( so.getServerClass(), so.getService(), so.getServerName() ) ).set( so.getServerAct() );
+			nServiceConvHigh.labels         ( broker.getBrokerID(), printServiceName( so.getServerClass(), so.getService(), so.getServerName() ) ).set( so.getConvHigh() );
+			nServiceConvPending.labels      ( broker.getBrokerID(), printServiceName( so.getServerClass(), so.getService(), so.getServerName() ) ).set( so.getConvPending() );
+			nServiceConvPendingHigh.labels  ( broker.getBrokerID(), printServiceName( so.getServerClass(), so.getService(), so.getServerName() ) ).set( so.getConvPendingHigh() );			
 		}
 	}
 
 	private String printServiceName( String className, String serviceName, String serverName ) {
-		return serviceName;
+		return className + "/" + serviceName + "/" + serverName;
 	}
 }
