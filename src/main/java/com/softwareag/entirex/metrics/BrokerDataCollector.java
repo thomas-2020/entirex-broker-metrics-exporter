@@ -26,6 +26,7 @@ public class BrokerDataCollector {
 
 	private static final Logger logger = LoggerFactory.getLogger( BrokerDataCollector.class );
 
+	private Gauge nBrokerStatus;
 	private Gauge nServiceRequests;
 	private Gauge nServiceServer;
 	private Gauge nServiceConvHigh;
@@ -34,14 +35,15 @@ public class BrokerDataCollector {
 
 	@PostConstruct
 	private void init() {
+		logger.info( "Connect to Broker [" + brokerID + "]. Polling metrics in the interval [" + refreshInterval + "]ms." );
 		try {
 			String labelPrefix      = "sag_etb_";
-			nServiceRequests        = Gauge.build().name( labelPrefix + "service_requests"  ).help( "Current number of service requests" ) .labelNames( "BrokerID", "Service" ).register();
-			nServiceServer          = Gauge.build().name( labelPrefix + "active_servers"    ).help( "Current number of servers"          ) .labelNames( "BrokerID", "Service" ).register();
-			nServiceConvHigh        = Gauge.build().name( labelPrefix + "conv_high"         ).help( "Conversation high"                  ) .labelNames( "BrokerID", "Service" ).register();
-			nServiceConvPending     = Gauge.build().name( labelPrefix + "conv_pending"      ).help( "Conversation pending"               ) .labelNames( "BrokerID", "Service" ).register();
-			nServiceConvPendingHigh = Gauge.build().name( labelPrefix + "conv_pending_high" ).help( "Conversation pending high"          ) .labelNames( "BrokerID", "Service" ).register();
-			
+			nBrokerStatus           = Gauge.build().name( labelPrefix + "node_stats_up"     ).help( "Connection status to Broker"        ) .labelNames( "broker" ).register();
+			nServiceRequests        = Gauge.build().name( labelPrefix + "service_requests"  ).help( "Current number of service requests" ) .labelNames( "broker", "service" ).register();
+			nServiceServer          = Gauge.build().name( labelPrefix + "active_servers"    ).help( "Current number of servers"          ) .labelNames( "broker", "service" ).register();
+			nServiceConvHigh        = Gauge.build().name( labelPrefix + "conv_high"         ).help( "Conversation high"                  ) .labelNames( "broker", "service" ).register();
+			nServiceConvPending     = Gauge.build().name( labelPrefix + "conv_pending"      ).help( "Conversation pending"               ) .labelNames( "broker", "service" ).register();
+			nServiceConvPendingHigh = Gauge.build().name( labelPrefix + "conv_pending_high" ).help( "Conversation pending high"          ) .labelNames( "broker", "service" ).register();			
 		}
 		catch ( Throwable e ) {
 			logger.error( "On DataCollector init: ", e );
@@ -56,6 +58,15 @@ public class BrokerDataCollector {
 
 	private Broker broker;
 
+	@Value( "${refreshInterval}" )
+	private String refreshInterval;
+
+	@Value( "${excludeServerClass}" )
+	private String excludeServerClass;
+
+	@Value( "${formatServiceName}" )
+	private String formatServiceName;
+
 	@Scheduled(fixedRateString = "${refreshInterval}", initialDelayString = "${refreshInterval}")
 	private void doPull() {
 		try {
@@ -63,10 +74,13 @@ public class BrokerDataCollector {
 				broker = new Broker( brokerID, user );
 			broker.logon();
 			pullMetrics_Services( broker );
+			nBrokerStatus.labels( brokerID ).set( 1 );
 			}
 		}
 		catch ( Throwable e ) {
 			logger.error( "on doPoll(): " + e.getLocalizedMessage() );
+			nBrokerStatus.labels( broker != null ? broker.getBrokerID() : brokerID ).set( 0 );
+			broker = null;
 		}
 	}
 
@@ -79,15 +93,25 @@ public class BrokerDataCollector {
 		IServiceResponse    res = req.sendReceive();
 		for ( int i = 0; i < res.getCommonHeader().getCurrentNumObjects(); i++ ) {
 			ServiceObject so = (ServiceObject) res.getServiceResponseObject( i );
-			nServiceRequests.labels         ( broker.getBrokerID(), printServiceName( so.getServerClass(), so.getService(), so.getServerName() ) ).set( so.getRequests() );
-			nServiceServer.labels           ( broker.getBrokerID(), printServiceName( so.getServerClass(), so.getService(), so.getServerName() ) ).set( so.getServerAct() );
-			nServiceConvHigh.labels         ( broker.getBrokerID(), printServiceName( so.getServerClass(), so.getService(), so.getServerName() ) ).set( so.getConvHigh() );
-			nServiceConvPending.labels      ( broker.getBrokerID(), printServiceName( so.getServerClass(), so.getService(), so.getServerName() ) ).set( so.getConvPending() );
-			nServiceConvPendingHigh.labels  ( broker.getBrokerID(), printServiceName( so.getServerClass(), so.getService(), so.getServerName() ) ).set( so.getConvPendingHigh() );			
+			if ( filterServiceMetrics( so ) ) {
+				String serviceName = printServiceName( so );
+				nServiceRequests.labels         ( broker.getBrokerID(), serviceName ).set( so.getRequests() );
+				nServiceServer.labels           ( broker.getBrokerID(), serviceName ).set( so.getServerAct() );
+				nServiceConvHigh.labels         ( broker.getBrokerID(), serviceName ).set( so.getConvHigh() );
+				nServiceConvPending.labels      ( broker.getBrokerID(), serviceName ).set( so.getConvPending() );
+				nServiceConvPendingHigh.labels  ( broker.getBrokerID(), serviceName ).set( so.getConvPendingHigh() );
+			}
 		}
 	}
 
-	private String printServiceName( String className, String serviceName, String serverName ) {
-		return className + "/" + serviceName + "/" + serverName;
+	private String printServiceName( ServiceObject so ) {
+		if ( formatServiceName.startsWith( "l" ) )
+			return so.getServerClass() + "/" +  so.getService() + "/" + so.getServerName();
+		else
+			return so.getService();
+	}
+
+	private boolean filterServiceMetrics( ServiceObject so ) {
+		return ! ( excludeServerClass != null && excludeServerClass.equals( so.getServerClass() ) );
 	}
 }
