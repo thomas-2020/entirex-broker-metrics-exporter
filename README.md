@@ -32,3 +32,21 @@ and therefore set the environment variable `BROKER` with value.
 ## Start Server
 
 Use `java -jar target/entirex-broker-metrics-exporter-0.0.1-SNAPSHOT.jar`.
+
+## Build Container
+
+To build a container for EntireX Broker Exporter, you can use the `Dockerfile`.
+
+```
+docker build -t entirex-broker-exporter:latest .
+```
+
+## Run Container
+
+To run the build, start following command to export metrics from `myBroker` ...
+
+```
+docker run -it -e BROKER=myBroker -p 8080:8080 entirex-broker-exporter:latest
+```
+
+Prometheus can now poll the metrics from localhost:8080/metrics
