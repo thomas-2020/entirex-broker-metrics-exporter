@@ -73,7 +73,7 @@ public class BrokerDataCollector {
 			if ( broker == null ) {
 				broker = new Broker( brokerID, user );
 			broker.logon();
-			pullMetrics_Services( broker );
+			pollMetrics_Services( broker );
 			nBrokerStatus.labels( brokerID ).set( 1 );
 			}
 		}
@@ -84,7 +84,7 @@ public class BrokerDataCollector {
 		}
 	}
 
-	private void pullMetrics_Services( Broker broker ) throws Throwable {
+	private void pollMetrics_Services( Broker broker ) throws Throwable {
 		InfoServiceMessage info = new InfoServiceMessage();
 		info.setInterfaceVersion( InterfaceVersion.VERSION_2 );
 		info.setBlockLength     ( new BlockLength( 7200 ) );
