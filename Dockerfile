@@ -8,6 +8,9 @@ RUN mvn install:install-file -Dfile=./entirex-broker-metrics-exporter/libs/exx10
 
 RUN cd entirex-broker-metrics-exporter ; mvn install
 
-RUN mv /entirex-broker-metrics-exporter/application.properties /
+RUN mv /entirex-broker-metrics-exporter/application.properties                                    /
+RUN mv /entirex-broker-metrics-exporter/target/entirex-broker-metrics-exporter-0.0.1-SNAPSHOT.jar /
+RUN rm -fR /entirex-broker-metrics-exporter
+RUN rm -fR /.m2
 
-ENTRYPOINT ["java", "-jar", "/entirex-broker-metrics-exporter/target/entirex-broker-metrics-exporter-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "/entirex-broker-metrics-exporter-0.0.1-SNAPSHOT.jar"]
