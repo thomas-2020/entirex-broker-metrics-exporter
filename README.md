@@ -49,4 +49,12 @@ To run the build, start following command to export metrics from `myBroker` ...
 docker run -it -e BROKER=myBroker -p 8080:8080 entirex-broker-exporter:latest
 ```
 
-Prometheus can now poll the metrics from localhost:8080/metrics
+Prometheus can poll now the metrics from `localhost:8080/metrics`.
+
+## Deploy Container to Kubernetes using Helm Chart
+
+To deploy the container to Kubernetes, it is possible to use the Helm Chart (in sub-folder `helm`).
+
+```
+helm upgrade --install my-exporter helm -n my-namespace --set image.repository=pswminnocontainerref.azurecr.io/exx/entirex-broker-exporter --set broker=myBroker
+```
