@@ -106,9 +106,9 @@ public class BrokerDataCollector {
 
 	private String printServiceName( ServiceObject so ) {
 		if ( formatServiceName.startsWith( "l" ) )
-			return so.getServerClass() + "/" +  so.getService() + "/" + so.getServerName();
+			return so.getServerClass() + "/" +  so.getServerName() + "/" + so.getService();
 		else
-			return so.getService();
+			return so.getServerName();
 	}
 
 	private boolean filterServiceMetrics( ServiceObject so ) {
