@@ -1,5 +1,6 @@
 package com.softwareag.entirex.metrics;
 
+import io.prometheus.client.Counter;
 import io.prometheus.client.Gauge;
 
 import javax.annotation.PostConstruct;
@@ -27,7 +28,7 @@ public class BrokerDataCollector {
 	private static final Logger logger = LoggerFactory.getLogger( BrokerDataCollector.class );
 
 	private Gauge nBrokerStatus;
-	private Gauge nServiceRequests;
+	private Counter nServiceRequests;
 	private Gauge nServiceServer;
 	private Gauge nServiceConvHigh;
 	private Gauge nServiceConvPending;
@@ -38,12 +39,12 @@ public class BrokerDataCollector {
 		logger.info( "Connect to Broker [" + brokerID + "]. Polling metrics in the interval [" + refreshInterval + "]ms." );
 		try {
 			String labelPrefix      = "sag_etb_";
-			nBrokerStatus           = Gauge.build().name( labelPrefix + "node_stats_up"     ).help( "Connection status to Broker"        ) .labelNames( "broker" ).register();
-			nServiceRequests        = Gauge.build().name( labelPrefix + "service_requests"  ).help( "Current number of service requests" ) .labelNames( "broker", "service" ).register();
-			nServiceServer          = Gauge.build().name( labelPrefix + "active_servers"    ).help( "Current number of servers"          ) .labelNames( "broker", "service" ).register();
-			nServiceConvHigh        = Gauge.build().name( labelPrefix + "conv_high"         ).help( "Conversation high"                  ) .labelNames( "broker", "service" ).register();
-			nServiceConvPending     = Gauge.build().name( labelPrefix + "conv_pending"      ).help( "Conversation pending"               ) .labelNames( "broker", "service" ).register();
-			nServiceConvPendingHigh = Gauge.build().name( labelPrefix + "conv_pending_high" ).help( "Conversation pending high"          ) .labelNames( "broker", "service" ).register();			
+			nBrokerStatus           = Gauge.build().name  ( labelPrefix + "node_stats_up"     ).help( "Connection status to Broker"        ) .labelNames( "broker" ).register();
+			nServiceRequests        = Counter.build().name( labelPrefix + "service_requests"  ).help( "Current number of service requests" ) .labelNames( "broker", "service" ).register();
+			nServiceServer          = Gauge.build().name  ( labelPrefix + "active_servers"    ).help( "Current number of servers"          ) .labelNames( "broker", "service" ).register();
+			nServiceConvHigh        = Gauge.build().name  ( labelPrefix + "conv_high"         ).help( "Conversation high"                  ) .labelNames( "broker", "service" ).register();
+			nServiceConvPending     = Gauge.build().name  ( labelPrefix + "conv_pending"      ).help( "Conversation pending"               ) .labelNames( "broker", "service" ).register();
+			nServiceConvPendingHigh = Gauge.build().name  ( labelPrefix + "conv_pending_high" ).help( "Conversation pending high"          ) .labelNames( "broker", "service" ).register();			
 		}
 		catch ( Throwable e ) {
 			logger.error( "On DataCollector init: ", e );
