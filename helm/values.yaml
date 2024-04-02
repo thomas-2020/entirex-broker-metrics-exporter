@@ -86,4 +86,5 @@ tolerations: []
 
 affinity: {}
 
+# -- Connect to broker to retrieve Metrics 
 broker: localhost:1971
