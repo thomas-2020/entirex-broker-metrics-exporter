@@ -58,3 +58,29 @@ To deploy the container to Kubernetes, it is possible to use the Helm Chart (in 
 ```
 helm upgrade --install my-exporter helm -n my-namespace --set image.repository=pswminnocontainerref.azurecr.io/exx/entirex-broker-exporter --set broker=myBroker
 ```
+
+## Add Helm Chart Repository
+
+To add this GitHub repo to your Helm Chart repositories, use ...
+
+```
+helm repo add entirex https://raw.githubusercontent.com/thomas-2020/entirex-broker-metrics-exporter/gh-pages/chart
+```
+
+Check the content with ...
+
+```
+helm search repo entirex
+```
+
+## Actions to Package Helm Chart Repository
+
+```
+helm package -u .\helm
+mv entirex-broker-exporter-1.0.0.tgz ./chart
+cd chart
+helm repo index . --url https://raw.githubusercontent.com/thomas-2020/entirex-broker-metrics-exporter/gh-pages/chart
+# Commit to gh-pages
+git branch -M      gh-pages
+git push -f origin gh-pages
+```
