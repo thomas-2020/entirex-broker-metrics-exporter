@@ -3,7 +3,7 @@
  *
  * Projekt: Systemmanagement
  *
- * Änderungshistorie:
+ * Change history:
  *
  * Nr ! Datum    ! Name            ! Änderungsgrund
  * -----------------------------------------------------------------------------
