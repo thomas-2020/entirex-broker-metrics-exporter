@@ -5,7 +5,7 @@
  *
  * Change history:
  *
- * Nr ! Datum    ! Name            ! Änderungsgrund
+ * Nr ! Datum    ! Name            ! Change reason
  * -----------------------------------------------------------------------------
  *  1 ! 03.04.03 ! Rupp            ! created
  *

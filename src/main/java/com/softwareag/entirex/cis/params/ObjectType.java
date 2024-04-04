@@ -3,9 +3,9 @@
  *
  * Projekt: Systemmanagement
  *
- * Änderungshistorie:
+ * Change history:
  *
- * Nr ! Datum    ! Name            ! Änderungsgrund
+ * Nr ! Datum    ! Name            ! Change reason
  * -----------------------------------------------------------------------------
  *  1 ! 11.05.04 ! Rupp            ! neu erstellt
  *
