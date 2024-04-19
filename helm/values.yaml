@@ -29,6 +29,22 @@ podAnnotations:
   prometheus.io/port:   "8080"
   prometheus.io/scheme: http
 
+# -- Define values for Prometheus Operator to scrap metrics via ServiceMonitor.
+prometheus:
+  path:          "/metrics"
+  port:          "8080"
+  scheme:        "http"
+  ## -- Only used on annotation 
+  scrape:        "true"
+  ## -- Only used on ServiceMonitor
+  interval:      10s
+  ## -- Only used on ServiceMonitor
+  scrapeTimeout: 10s
+
+# -- Create and enable ServiceMonitor. The default is `false`.
+serviceMonitor:
+  enabled: false
+
 podSecurityContext: {}
   # fsGroup: 2000
 
