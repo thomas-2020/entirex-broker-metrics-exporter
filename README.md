@@ -82,6 +82,8 @@ mv entirex-broker-exporter-1.0.0.tgz ./chart
 cd chart
 helm repo index . --url https://raw.githubusercontent.com/thomas-2020/entirex-broker-metrics-exporter/gh-pages/chart
 # Commit to gh-pages
+git add .
+git commit -am "<commit-message>"
 git branch -M      gh-pages
 git push -f origin gh-pages
 ```
