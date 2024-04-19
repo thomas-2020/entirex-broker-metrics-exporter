@@ -28,7 +28,7 @@ public class BrokerDataCollector {
 	private static final Logger logger = LoggerFactory.getLogger( BrokerDataCollector.class );
 
 	private Gauge nBrokerStatus;
-	private Counter nServiceRequests;
+	private Gauge nServiceRequests;
 	private Gauge nServiceServer;
 	private Gauge nServiceConvHigh;
 	private Gauge nServiceConvPending;
@@ -40,7 +40,7 @@ public class BrokerDataCollector {
 		try {
 			String labelPrefix      = "sag_etb_";
 			nBrokerStatus           = Gauge.build().name  ( labelPrefix + "node_stats_up"     ).help( "Connection status to Broker"        ) .labelNames( "broker" ).register();
-			nServiceRequests        = Counter.build().name( labelPrefix + "service_requests"  ).help( "Current number of service requests" ) .labelNames( "broker", "service" ).register();
+			nServiceRequests        = Gauge.build().name  ( labelPrefix + "service_requests"  ).help( "Current number of service requests" ) .labelNames( "broker", "service" ).register();
 			nServiceServer          = Gauge.build().name  ( labelPrefix + "active_servers"    ).help( "Current number of servers"          ) .labelNames( "broker", "service" ).register();
 			nServiceConvHigh        = Gauge.build().name  ( labelPrefix + "conv_high"         ).help( "Conversation high"                  ) .labelNames( "broker", "service" ).register();
 			nServiceConvPending     = Gauge.build().name  ( labelPrefix + "conv_pending"      ).help( "Conversation pending"               ) .labelNames( "broker", "service" ).register();
