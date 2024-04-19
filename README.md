@@ -76,7 +76,8 @@ helm search repo entirex
 ## Actions to Package Helm Chart Repository
 
 ```
-helm package -u .\helm
+helm package -u ./helm
+mkdir -p ./chart
 mv entirex-broker-exporter-1.0.0.tgz ./chart
 cd chart
 helm repo index . --url https://raw.githubusercontent.com/thomas-2020/entirex-broker-metrics-exporter/gh-pages/chart
