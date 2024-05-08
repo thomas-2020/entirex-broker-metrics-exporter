@@ -19,6 +19,12 @@ The server requires properties and these are reading from `application.propertie
 * `user`: Use the username to login to EntireX Broker
 * `excludeServerClass`: Exclude metrics of services which has the server class name
 * `formatServiceName`: Format of service name l(ong)=CLASS/SERVICE/SERVER s(hort)=SERVICE
+* `customLabelName4Services`: Set a custom label for services. Default is `package`.
+* `mapServiceToLabelValueList`: Map service to label value of custom label, e.g. "service1=labelvalue1,service2=labelvalue2"
+
+## Extra or Custom Label for Services
+
+To align services to other metrics, you can set own extra or custom label on services. The default label name is `package` defined in `application.properties`. E.g. if your service has the name `RPCMAT` and in Integration Server is a package `Material` with an adapter services which use the EntireX service, set the values `RPCMAT=Material` in `mapServiceToLabelValueList`. Than all metrics of `RPCMAT` will have the label `package=Material`.
 
 ## Using Environment Variable
 
@@ -31,7 +37,7 @@ and therefore set the environment variable `BROKER` with value.
   
 ## Start Server
 
-Use `java -jar target/entirex-broker-metrics-exporter-0.0.1-SNAPSHOT.jar`.
+Use `java -jar target/entirex-broker-metrics-exporter-0.0.1-SNAPSHOT.jar`
 
 ## Build Container
 
