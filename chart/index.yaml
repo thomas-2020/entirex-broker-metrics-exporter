@@ -3,7 +3,17 @@ entries:
   entirex-broker-exporter:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2024-04-19T10:01:42.461516873+02:00"
+    created: "2024-05-23T08:03:16.627956527+02:00"
+    description: EntireX Broker metrics exporter
+    digest: 4fb144e26a75db591b98868640138fe9e46c291c87f77d69c7a848b38b85e41d
+    name: entirex-broker-exporter
+    type: application
+    urls:
+    - https://raw.githubusercontent.com/thomas-2020/entirex-broker-metrics-exporter/gh-pages/chart/entirex-broker-exporter-1.1.0.tgz
+    version: 1.1.0
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2024-05-23T08:03:16.627374376+02:00"
     description: EntireX Broker metrics exporter
     digest: 755ec3c15a0fd000f4b84ddebd6da3a0a08f358846ed1053f6e6c7fb1504c37f
     name: entirex-broker-exporter
@@ -11,4 +21,4 @@ entries:
     urls:
     - https://raw.githubusercontent.com/thomas-2020/entirex-broker-metrics-exporter/gh-pages/chart/entirex-broker-exporter-1.0.0.tgz
     version: 1.0.0
-generated: "2024-04-19T10:01:42.459888338+02:00"
+generated: "2024-05-23T08:03:16.625749528+02:00"
