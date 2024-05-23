@@ -36,6 +36,7 @@ public class BrokerDataCollector {
 	private Gauge nServiceConvHigh;
 	private Gauge nServiceConvPending;
 	private Gauge nServiceConvPendingHigh;
+	private Gauge nServiceConvActive;
 
 	@PostConstruct
 	private void init() {
@@ -48,6 +49,7 @@ public class BrokerDataCollector {
 			nServiceConvHigh        = Gauge.build().name  ( labelPrefix + "conv_high"         ).help( "Conversation high"                  ) .labelNames( "broker", "service", customLabelName4Services ).register();
 			nServiceConvPending     = Gauge.build().name  ( labelPrefix + "conv_pending"      ).help( "Conversation pending"               ) .labelNames( "broker", "service", customLabelName4Services ).register();
 			nServiceConvPendingHigh = Gauge.build().name  ( labelPrefix + "conv_pending_high" ).help( "Conversation pending high"          ) .labelNames( "broker", "service", customLabelName4Services ).register();			
+			nServiceConvActive      = Gauge.build().name  ( labelPrefix + "conv_active"       ).help( "Conversation active"                ) .labelNames( "broker", "service", customLabelName4Services ).register();			
 
 			StringTokenizer      st = new StringTokenizer( mapServiceToLabelValueList, ",");
 			while ( st.hasMoreElements() ) {
@@ -125,6 +127,7 @@ public class BrokerDataCollector {
 				nServiceConvHigh.labels         ( broker.getBrokerID(), serviceName, customLabel ).set( so.getConvHigh() );
 				nServiceConvPending.labels      ( broker.getBrokerID(), serviceName, customLabel ).set( so.getConvPending() );
 				nServiceConvPendingHigh.labels  ( broker.getBrokerID(), serviceName, customLabel ).set( so.getConvPendingHigh() );
+				nServiceConvActive.labels       ( broker.getBrokerID(), serviceName, customLabel ).set( so.getConvAct() );
 			}
 		}
 	}
