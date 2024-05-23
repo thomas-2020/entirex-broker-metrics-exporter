@@ -2,9 +2,18 @@
 
 Server to provide/export Prometheuse metrics from EntireX Broker.
 
-## Instroduction
+## Introduction
 
 To provide and export Prometheuse metrics from EntireX Broker, a HTTP Server (Tomcat) process is needed. The Java server process connects via ACI to EntireX Broker, retrieves the Broker metrics and provides a REST interface on `/metrics` for Prometheus protocol.
+
+## Prerequisites Installed Libs
+
+Install JARs into Maven repository ...
+
+```
+mvn install:install-file -Dfile=libs/exx107/entirex.jar -DgroupId=com.softwareag.entirex -DartifactId=java-client -Dversion=10.7 -Dpackaging=jar -DgeneratePom=true
+mvn install:install-file -Dfile=libs/exx107/exxutil.jar -DgroupId=com.softwareag.entirex -DartifactId=java-util -Dversion=10.7 -Dpackaging=jar -DgeneratePom=true
+```
 
 ## Build Server
 

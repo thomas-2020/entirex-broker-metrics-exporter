@@ -104,3 +104,9 @@ affinity: {}
 
 # -- Connect to broker to retrieve Metrics 
 broker: localhost:1971
+
+# -- Add this label to services
+customLabelName4Services: package
+
+# -- Map service to label value of custom label, e.g. "service1=labelvalue1,service2=labelvalue2"
+mapServiceToLabelValueList: ""

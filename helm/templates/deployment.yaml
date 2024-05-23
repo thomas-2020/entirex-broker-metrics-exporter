@@ -48,6 +48,10 @@ spec:
           env:
           - name: BROKER
             value: {{ .Values.broker }}
+          - name: customLabelName4Services
+            value: {{ .Values.customLabelName4Services }}
+          - name: mapServiceToLabelValueList
+            value: {{ .Values.mapServiceToLabelValueList }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
