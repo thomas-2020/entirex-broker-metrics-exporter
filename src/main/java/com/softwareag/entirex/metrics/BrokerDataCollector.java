@@ -98,7 +98,6 @@ public class BrokerDataCollector {
 		try {
 			if ( broker == null ) {
 				broker = new Broker( brokerID, user );
-			broker.logon();
 			pollMetrics_Services( broker );
 			nBrokerStatus.labels( brokerID ).set( 1 );
 			}
@@ -111,6 +110,7 @@ public class BrokerDataCollector {
 	}
 
 	private void pollMetrics_Services( Broker broker ) throws Throwable {
+		broker.logon();
 		InfoServiceMessage info = new InfoServiceMessage();
 		info.setInterfaceVersion( InterfaceVersion.VERSION_2 );
 		info.setBlockLength     ( new BlockLength( 7200 ) );
@@ -130,6 +130,7 @@ public class BrokerDataCollector {
 				nServiceConvActive.labels       ( broker.getBrokerID(), serviceName, customLabel ).set( so.getConvAct() );
 			}
 		}
+		broker.logoff();
 	}
 
 	private String printServiceName( ServiceObject so ) {
