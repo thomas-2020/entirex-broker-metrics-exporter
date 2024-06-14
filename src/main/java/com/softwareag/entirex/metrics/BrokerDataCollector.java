@@ -23,6 +23,7 @@ import com.softwareag.entirex.cis.objects.ServiceObject;
 import com.softwareag.entirex.cis.params.BlockLength;
 import com.softwareag.entirex.cis.params.InterfaceVersion;
 import com.softwareag.entirex.cis.params.ObjectType;
+import com.softwareag.entirex.cis.params.ConvID;
 
 @Service
 @EnableScheduling
@@ -115,6 +116,7 @@ public class BrokerDataCollector {
 		info.setInterfaceVersion( InterfaceVersion.VERSION_2 );
 		info.setBlockLength     ( new BlockLength( 7200 ) );
 		info.setObjectType      ( ObjectType.SERVICE );
+		info.setConvID( new ConvID( "NEW" ) );
 		ServiceRequest      req = new ServiceRequest( broker, info );
 		IServiceResponse    res = req.sendReceive();
 		for ( int i = 0; i < res.getCommonHeader().getCurrentNumObjects(); i++ ) {
