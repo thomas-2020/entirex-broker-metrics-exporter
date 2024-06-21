@@ -99,9 +99,10 @@ public class BrokerDataCollector {
 		try {
 			if ( broker == null ) {
 				broker = new Broker( brokerID, user );
+				broker.logon();
+			}
 			pollMetrics_Services( broker );
 			nBrokerStatus.labels( brokerID ).set( 1 );
-			}
 		}
 		catch ( Throwable e ) {
 			logger.error( "on doPoll(): " + e.getLocalizedMessage() );
@@ -111,12 +112,10 @@ public class BrokerDataCollector {
 	}
 
 	private void pollMetrics_Services( Broker broker ) throws Throwable {
-		broker.logon();
 		InfoServiceMessage info = new InfoServiceMessage();
 		info.setInterfaceVersion( InterfaceVersion.VERSION_2 );
 		info.setBlockLength     ( new BlockLength( 7200 ) );
 		info.setObjectType      ( ObjectType.SERVICE );
-		info.setConvID( new ConvID( "NEW" ) );
 		ServiceRequest      req = new ServiceRequest( broker, info );
 		IServiceResponse    res = req.sendReceive();
 		for ( int i = 0; i < res.getCommonHeader().getCurrentNumObjects(); i++ ) {
@@ -132,7 +131,6 @@ public class BrokerDataCollector {
 				nServiceConvActive.labels       ( broker.getBrokerID(), serviceName, customLabel ).set( so.getConvAct() );
 			}
 		}
-		broker.logoff();
 	}
 
 	private String printServiceName( ServiceObject so ) {
