@@ -29,7 +29,7 @@ The server requires properties and these are reading from `application.propertie
 * `excludeServerClass`: Exclude metrics of services which has the server class name
 * `formatServiceName`: Format of service name l(ong)=CLASS/SERVICE/SERVER s(hort)=SERVICE
 * `customLabelName4Services`: Set a custom label for services. Default is `package`.
-* `mapServiceToLabelValueList`: Map service to label value of custom label, e.g. "service1=labelvalue1,service2=labelvalue2"
+* `mapServiceToLabelValueList`: Map service to label value of custom label, e.g. "service1=labelvalue1;service2=labelvalue2"
 
 ## Extra or Custom Label for Services
 

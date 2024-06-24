@@ -52,7 +52,7 @@ public class BrokerDataCollector {
 			nServiceConvPendingHigh = Gauge.build().name  ( labelPrefix + "conv_pending_high" ).help( "Conversation pending high"          ) .labelNames( "broker", "service", customLabelName4Services ).register();			
 			nServiceConvActive      = Gauge.build().name  ( labelPrefix + "conv_active"       ).help( "Conversation active"                ) .labelNames( "broker", "service", customLabelName4Services ).register();			
 
-			StringTokenizer      st = new StringTokenizer( mapServiceToLabelValueList, ",");
+			StringTokenizer      st = new StringTokenizer( mapServiceToLabelValueList, ";");
 			while ( st.hasMoreElements() ) {
 				String            s = st.nextToken();
 				StringTokenizer st2 = new StringTokenizer( s, "=" );
@@ -122,13 +122,15 @@ public class BrokerDataCollector {
 			ServiceObject so = (ServiceObject) res.getServiceResponseObject( i );
 			if ( filterServiceMetrics( so ) ) {
 				String serviceName = printServiceName( so );
-				String customLabel = getCustomLabelValue( serviceName );
-				nServiceRequests.labels         ( broker.getBrokerID(), serviceName, customLabel ).set( so.getRequests() );
-				nServiceServer.labels           ( broker.getBrokerID(), serviceName, customLabel ).set( so.getServerAct() );
-				nServiceConvHigh.labels         ( broker.getBrokerID(), serviceName, customLabel ).set( so.getConvHigh() );
-				nServiceConvPending.labels      ( broker.getBrokerID(), serviceName, customLabel ).set( so.getConvPending() );
-				nServiceConvPendingHigh.labels  ( broker.getBrokerID(), serviceName, customLabel ).set( so.getConvPendingHigh() );
-				nServiceConvActive.labels       ( broker.getBrokerID(), serviceName, customLabel ).set( so.getConvAct() );
+				String[] customLabel = getCustomLabelValues( serviceName );
+				for ( int j = 0; j < customLabel.length; j++ ) {
+					nServiceRequests.labels         ( broker.getBrokerID(), serviceName, customLabel[ j ] ).set( so.getRequests() );
+					nServiceServer.labels           ( broker.getBrokerID(), serviceName, customLabel[ j ] ).set( so.getServerAct() );
+					nServiceConvHigh.labels         ( broker.getBrokerID(), serviceName, customLabel[ j ] ).set( so.getConvHigh() );
+					nServiceConvPending.labels      ( broker.getBrokerID(), serviceName, customLabel[ j ] ).set( so.getConvPending() );
+					nServiceConvPendingHigh.labels  ( broker.getBrokerID(), serviceName, customLabel[ j ] ).set( so.getConvPendingHigh() );
+					nServiceConvActive.labels       ( broker.getBrokerID(), serviceName, customLabel[ j ] ).set( so.getConvAct() );					
+				}
 			}
 		}
 	}
@@ -148,6 +150,18 @@ public class BrokerDataCollector {
 		String back = mapServiceToLabelValue.get( serviceName );
 		if ( back == null || back.length() == 0 )
 			back = "unknown";
+		return back;
+	}
+
+	private String[] getCustomLabelValues( String serviceName ) {
+		String        list = getCustomLabelValue( serviceName );
+		StringTokenizer st = new StringTokenizer( list, "," );
+		String[]      back = new String[ st.countTokens() ];
+		int              i = 0;
+		while ( st.hasMoreElements() ) {
+			back[ i++ ] = st.nextToken();
+		}
+
 		return back;
 	}
 }
