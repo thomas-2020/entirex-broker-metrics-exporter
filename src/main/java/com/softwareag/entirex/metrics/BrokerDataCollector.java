@@ -50,7 +50,7 @@ public class BrokerDataCollector {
 			nServiceConvHigh        = Gauge.build().name  ( labelPrefix + "conv_high"         ).help( "Conversation high"                  ) .labelNames( "broker", "service", customLabelName4Services ).register();
 			nServiceConvPending     = Gauge.build().name  ( labelPrefix + "conv_pending"      ).help( "Conversation pending"               ) .labelNames( "broker", "service", customLabelName4Services ).register();
 			nServiceConvPendingHigh = Gauge.build().name  ( labelPrefix + "conv_pending_high" ).help( "Conversation pending high"          ) .labelNames( "broker", "service", customLabelName4Services ).register();			
-			nServiceConvActive      = Gauge.build().name  ( labelPrefix + "conv_active"       ).help( "Conversation active"                ) .labelNames( "broker", "service", customLabelName4Services ).register();			
+			nServiceConvActive      = Gauge.build().name  ( labelPrefix + "conv_active"       ).help( "Conversation active"                ) .labelNames( "broker", "service", customLabelName4Services ).register();
 
 			StringTokenizer      st = new StringTokenizer( mapServiceToLabelValueList, ";");
 			while ( st.hasMoreElements() ) {
@@ -108,6 +108,7 @@ public class BrokerDataCollector {
 			logger.error( "on doPoll(): " + e.getLocalizedMessage() );
 			nBrokerStatus.labels( broker != null ? broker.getBrokerID() : brokerID ).set( 0 );
 			broker = null;
+			clearAllMetrics();
 		}
 	}
 
@@ -163,5 +164,14 @@ public class BrokerDataCollector {
 		}
 
 		return back;
+	}
+
+	private void clearAllMetrics() {
+		nServiceRequests.clear();
+		nServiceServer.clear();
+		nServiceConvHigh.clear();
+		nServiceConvPending.clear();
+		nServiceConvPendingHigh.clear();
+		nServiceConvActive.clear();
 	}
 }
