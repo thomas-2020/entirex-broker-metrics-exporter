@@ -3,11 +3,11 @@
  *
  * Projekt: Systemmanagement
  *
- * �nderungshistorie:
+ * Change history:
  *
- * Nr ! Datum    ! Name            ! �nderungsgrund
+ * Nr ! Datum    ! Name            ! Change history
  * -----------------------------------------------------------------------------
- *  1 ! 06.06.01 ! Rupp            ! neu erstellt
+ *  1 ! 06.06.01 ! Rupp            ! created
  *
  */
 
@@ -21,7 +21,7 @@ import com.softwareag.entirex.cis.utils.*;
 public class ServiceObject
     extends AbstractServiceResponseObject
 	{
-
+	// Source: https://docs.webmethods.io/on-premises/entirex/en/10.7.0/webhelp/aci/cisData.htm#cisData_infoReply_SERVICE-OBJECT
 	//ETB_CHAR    server_class [S_SERVER_CLASS];/* class             WBLV3*/
 	//ETB_CHAR    server [S_SERVER_NAME];   /* server                     */
 	//ETB_CHAR    service    [S_SERVICE];   /* service                    */
@@ -41,8 +41,8 @@ public class ServiceObject
 	//ETB_LONG    nShortMsgBufferHigh;      /* highest no.short msg.buffs.*/
 	//                                    /* simultaneously active      */
 	//                                    /* since broker start         */
-	//ETB_LONG    nWaitServer;              /* no. waits for server msgs. */
-	//ETB_LONG    nServerOccupied;          /* no. times all server were  */
+	//ETB_LONG    nWaitServer;              /* Number of times a client had to wait for this service or messages from the server. */
+	//ETB_LONG    nServerOccupied;          /* Number of times a client request (SEND with CONVID=NEW or NONE) could not be immediately assigned to a waiting server, that is, all servers offering this service are occupied.  */
 	//                                    /* occupied                   */
 	//ETB_LONG    nPending;                 /* no. pending conversations  */
 	//ETB_LONG    nPendingHigh;             /* highest no. pending conv.  */
