@@ -38,6 +38,8 @@ public class BrokerDataCollector {
 	private Gauge nServiceConvPending;
 	private Gauge nServiceConvPendingHigh;
 	private Gauge nServiceConvActive;
+	private Gauge nServiceWaitsOfServers;
+	private Gauge nServiceOccupiedServers;
 
 	@PostConstruct
 	private void init() {
@@ -51,6 +53,8 @@ public class BrokerDataCollector {
 			nServiceConvPending     = Gauge.build().name  ( labelPrefix + "conv_pending"      ).help( "Conversation pending"               ) .labelNames( "broker", "service", customLabelName4Services ).register();
 			nServiceConvPendingHigh = Gauge.build().name  ( labelPrefix + "conv_pending_high" ).help( "Conversation pending high"          ) .labelNames( "broker", "service", customLabelName4Services ).register();			
 			nServiceConvActive      = Gauge.build().name  ( labelPrefix + "conv_active"       ).help( "Conversation active"                ) .labelNames( "broker", "service", customLabelName4Services ).register();
+			nServiceWaitsOfServers  = Gauge.build().name  ( labelPrefix + "waits_of_servers"  ).help( "Number of waits of servers"         ) .labelNames( "broker", "service", customLabelName4Services ).register();
+			nServiceOccupiedServers = Gauge.build().name  ( labelPrefix + "occupied_servers"  ).help( "Number of occupied servers"         ) .labelNames( "broker", "service", customLabelName4Services ).register();
 
 			StringTokenizer      st = new StringTokenizer( mapServiceToLabelValueList, ";");
 			while ( st.hasMoreElements() ) {
@@ -130,7 +134,9 @@ public class BrokerDataCollector {
 					nServiceConvHigh.labels         ( broker.getBrokerID(), serviceName, customLabel[ j ] ).set( so.getConvHigh() );
 					nServiceConvPending.labels      ( broker.getBrokerID(), serviceName, customLabel[ j ] ).set( so.getConvPending() );
 					nServiceConvPendingHigh.labels  ( broker.getBrokerID(), serviceName, customLabel[ j ] ).set( so.getConvPendingHigh() );
-					nServiceConvActive.labels       ( broker.getBrokerID(), serviceName, customLabel[ j ] ).set( so.getConvAct() );					
+					nServiceConvActive.labels       ( broker.getBrokerID(), serviceName, customLabel[ j ] ).set( so.getConvAct() );
+					nServiceWaitsOfServers.label    ( broker.getBrokerID(), serviceName, customLabel[ j ] ).set( so.getNumWaits() );
+					nServiceOccupiedServers.label   ( broker.getBrokerID(), serviceName, customLabel[ j ] ).set( so.getNumOccupied() );
 				}
 			}
 		}
@@ -173,5 +179,7 @@ public class BrokerDataCollector {
 		nServiceConvPending.clear();
 		nServiceConvPendingHigh.clear();
 		nServiceConvActive.clear();
+		nServiceWaitsOfServers.clear();
+		nServiceOccupiedServers.clear();
 	}
 }
