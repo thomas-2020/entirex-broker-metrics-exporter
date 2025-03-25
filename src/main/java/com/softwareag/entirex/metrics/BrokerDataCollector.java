@@ -45,6 +45,9 @@ public class BrokerDataCollector {
 	private void init() {
 		logger.info( "Connect to Broker [" + brokerID + "]. Polling metrics in the interval [" + refreshInterval + "]ms." );
 		try {
+			if ( customLabelName4Services == null || customLabelName4Services.length() == 0 )
+				customLabelName4Services = "package";  // avoid exception of incorect label name  
+
 			String labelPrefix      = "sag_etb_";
 			nBrokerStatus           = Gauge.build().name  ( labelPrefix + "node_stats_up"     ).help( "Connection status to Broker"        ) .labelNames( "broker" ).register();
 			nServiceRequests        = Gauge.build().name  ( labelPrefix + "service_requests"  ).help( "Current number of service requests" ) .labelNames( "broker", "service", customLabelName4Services ).register();
@@ -173,13 +176,18 @@ public class BrokerDataCollector {
 	}
 
 	private void clearAllMetrics() {
-		nServiceRequests.clear();
-		nServiceServer.clear();
-		nServiceConvHigh.clear();
-		nServiceConvPending.clear();
-		nServiceConvPendingHigh.clear();
-		nServiceConvActive.clear();
-		nServiceWaitsOfServers.clear();
-		nServiceOccupiedServers.clear();
+		try {
+			nServiceRequests.clear();
+			nServiceServer.clear();
+			nServiceConvHigh.clear();
+			nServiceConvPending.clear();
+			nServiceConvPendingHigh.clear();
+			nServiceConvActive.clear();
+			nServiceWaitsOfServers.clear();
+			nServiceOccupiedServers.clear();
+		}
+		catch (Throwable e ) {
+			
+		}
 	}
 }
