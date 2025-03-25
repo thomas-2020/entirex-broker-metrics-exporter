@@ -135,8 +135,8 @@ public class BrokerDataCollector {
 					nServiceConvPending.labels      ( broker.getBrokerID(), serviceName, customLabel[ j ] ).set( so.getConvPending() );
 					nServiceConvPendingHigh.labels  ( broker.getBrokerID(), serviceName, customLabel[ j ] ).set( so.getConvPendingHigh() );
 					nServiceConvActive.labels       ( broker.getBrokerID(), serviceName, customLabel[ j ] ).set( so.getConvAct() );
-					nServiceWaitsOfServers.label    ( broker.getBrokerID(), serviceName, customLabel[ j ] ).set( so.getNumWaits() );
-					nServiceOccupiedServers.label   ( broker.getBrokerID(), serviceName, customLabel[ j ] ).set( so.getNumOccupied() );
+					nServiceWaitsOfServers.labels   ( broker.getBrokerID(), serviceName, customLabel[ j ] ).set( so.getNumWaits() );
+					nServiceOccupiedServers.labels  ( broker.getBrokerID(), serviceName, customLabel[ j ] ).set( so.getNumOccupied() );
 				}
 			}
 		}
