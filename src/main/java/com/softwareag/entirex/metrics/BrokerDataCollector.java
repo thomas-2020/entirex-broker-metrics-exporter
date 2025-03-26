@@ -40,24 +40,39 @@ public class BrokerDataCollector {
 	private Gauge nServiceConvActive;
 	private Gauge nServiceWaitsOfServers;
 	private Gauge nServiceOccupiedServers;
+	private Gauge nServiceUOWsActive;
+	private Gauge nServiceUOWsMax;
 
 	@PostConstruct
 	private void init() {
 		logger.info( "Connect to Broker [" + brokerID + "]. Polling metrics in the interval [" + refreshInterval + "]ms." );
 		try {
-			if ( customLabelName4Services == null || customLabelName4Services.length() == 0 )
-				customLabelName4Services = "package";  // avoid exception of incorect label name  
-
-			String labelPrefix      = "sag_etb_";
-			nBrokerStatus           = Gauge.build().name  ( labelPrefix + "node_stats_up"     ).help( "Connection status to Broker"        ) .labelNames( "broker" ).register();
-			nServiceRequests        = Gauge.build().name  ( labelPrefix + "service_requests"  ).help( "Current number of service requests" ) .labelNames( "broker", "service", customLabelName4Services ).register();
-			nServiceServer          = Gauge.build().name  ( labelPrefix + "active_servers"    ).help( "Current number of servers"          ) .labelNames( "broker", "service", customLabelName4Services ).register();
-			nServiceConvHigh        = Gauge.build().name  ( labelPrefix + "conv_high"         ).help( "Conversation high"                  ) .labelNames( "broker", "service", customLabelName4Services ).register();
-			nServiceConvPending     = Gauge.build().name  ( labelPrefix + "conv_pending"      ).help( "Conversation pending"               ) .labelNames( "broker", "service", customLabelName4Services ).register();
-			nServiceConvPendingHigh = Gauge.build().name  ( labelPrefix + "conv_pending_high" ).help( "Conversation pending high"          ) .labelNames( "broker", "service", customLabelName4Services ).register();			
-			nServiceConvActive      = Gauge.build().name  ( labelPrefix + "conv_active"       ).help( "Conversation active"                ) .labelNames( "broker", "service", customLabelName4Services ).register();
-			nServiceWaitsOfServers  = Gauge.build().name  ( labelPrefix + "waits_of_servers"  ).help( "Number of waits of servers"         ) .labelNames( "broker", "service", customLabelName4Services ).register();
-			nServiceOccupiedServers = Gauge.build().name  ( labelPrefix + "occupied_servers"  ).help( "Number of occupied servers"         ) .labelNames( "broker", "service", customLabelName4Services ).register();
+			String labelPrefix          = "sag_etb_"; //Prefix for all labels
+			nBrokerStatus               = Gauge.build().name  ( labelPrefix + "node_stats_up"     ).help( "Connection status to Broker"        ) .labelNames( "broker" ).register();
+			if ( isCustomLabelNameValid() ) {
+				nServiceRequests        = Gauge.build().name  ( labelPrefix + "service_requests"  ).help( "Current number of service requests" ) .labelNames( "broker", "service", customLabelName4Services ).register();
+				nServiceServer          = Gauge.build().name  ( labelPrefix + "active_servers"    ).help( "Current number of servers"          ) .labelNames( "broker", "service", customLabelName4Services ).register();
+				nServiceConvHigh        = Gauge.build().name  ( labelPrefix + "conv_high"         ).help( "Conversation high"                  ) .labelNames( "broker", "service", customLabelName4Services ).register();
+				nServiceConvPending     = Gauge.build().name  ( labelPrefix + "conv_pending"      ).help( "Conversation pending"               ) .labelNames( "broker", "service", customLabelName4Services ).register();
+				nServiceConvPendingHigh = Gauge.build().name  ( labelPrefix + "conv_pending_high" ).help( "Conversation pending high"          ) .labelNames( "broker", "service", customLabelName4Services ).register();			
+				nServiceConvActive      = Gauge.build().name  ( labelPrefix + "conv_active"       ).help( "Conversation active"                ) .labelNames( "broker", "service", customLabelName4Services ).register();
+				nServiceWaitsOfServers  = Gauge.build().name  ( labelPrefix + "waits_of_servers"  ).help( "Number of waits of servers"         ) .labelNames( "broker", "service", customLabelName4Services ).register();
+				nServiceOccupiedServers = Gauge.build().name  ( labelPrefix + "occupied_servers"  ).help( "Number of occupied servers"         ) .labelNames( "broker", "service", customLabelName4Services ).register();
+				nServiceUOWsActive      = Gauge.build().name  ( labelPrefix + "uows_active"       ).help( "Number of active UOWs"              ) .labelNames( "broker", "service", customLabelName4Services ).register();
+				nServiceUOWsMax         = Gauge.build().name  ( labelPrefix + "uows_max"          ).help( "Max number of UOWs"                 ) .labelNames( "broker", "service", customLabelName4Services ).register();
+			}
+			else {
+				nServiceRequests        = Gauge.build().name  ( labelPrefix + "service_requests"  ).help( "Current number of service requests" ) .labelNames( "broker", "service" ).register();
+				nServiceServer          = Gauge.build().name  ( labelPrefix + "active_servers"    ).help( "Current number of servers"          ) .labelNames( "broker", "service" ).register();
+				nServiceConvHigh        = Gauge.build().name  ( labelPrefix + "conv_high"         ).help( "Conversation high"                  ) .labelNames( "broker", "service" ).register();
+				nServiceConvPending     = Gauge.build().name  ( labelPrefix + "conv_pending"      ).help( "Conversation pending"               ) .labelNames( "broker", "service" ).register();
+				nServiceConvPendingHigh = Gauge.build().name  ( labelPrefix + "conv_pending_high" ).help( "Conversation pending high"          ) .labelNames( "broker", "service" ).register();			
+				nServiceConvActive      = Gauge.build().name  ( labelPrefix + "conv_active"       ).help( "Conversation active"                ) .labelNames( "broker", "service" ).register();
+				nServiceWaitsOfServers  = Gauge.build().name  ( labelPrefix + "waits_of_servers"  ).help( "Number of waits of servers"         ) .labelNames( "broker", "service" ).register();
+				nServiceOccupiedServers = Gauge.build().name  ( labelPrefix + "occupied_servers"  ).help( "Number of occupied servers"         ) .labelNames( "broker", "service" ).register();				
+				nServiceUOWsActive      = Gauge.build().name  ( labelPrefix + "uows_active"       ).help( "Number of active UOWs"              ) .labelNames( "broker", "service" ).register();
+				nServiceUOWsMax         = Gauge.build().name  ( labelPrefix + "uows_max"          ).help( "Max number of UOWs"                 ) .labelNames( "broker", "service" ).register();
+			}
 
 			StringTokenizer      st = new StringTokenizer( mapServiceToLabelValueList, ";");
 			while ( st.hasMoreElements() ) {
@@ -132,14 +147,30 @@ public class BrokerDataCollector {
 				String serviceName = printServiceName( so );
 				String[] customLabel = getCustomLabelValues( serviceName );
 				for ( int j = 0; j < customLabel.length; j++ ) {
-					nServiceRequests.labels         ( broker.getBrokerID(), serviceName, customLabel[ j ] ).set( so.getRequests() );
-					nServiceServer.labels           ( broker.getBrokerID(), serviceName, customLabel[ j ] ).set( so.getServerAct() );
-					nServiceConvHigh.labels         ( broker.getBrokerID(), serviceName, customLabel[ j ] ).set( so.getConvHigh() );
-					nServiceConvPending.labels      ( broker.getBrokerID(), serviceName, customLabel[ j ] ).set( so.getConvPending() );
-					nServiceConvPendingHigh.labels  ( broker.getBrokerID(), serviceName, customLabel[ j ] ).set( so.getConvPendingHigh() );
-					nServiceConvActive.labels       ( broker.getBrokerID(), serviceName, customLabel[ j ] ).set( so.getConvAct() );
-					nServiceWaitsOfServers.labels   ( broker.getBrokerID(), serviceName, customLabel[ j ] ).set( so.getNumWaits() );
-					nServiceOccupiedServers.labels  ( broker.getBrokerID(), serviceName, customLabel[ j ] ).set( so.getNumOccupied() );
+					if ( isCustomLabelNameValid() ) {
+						nServiceRequests.labels         ( broker.getBrokerID(), serviceName, customLabel[ j ] ).set( so.getRequests() );
+						nServiceServer.labels           ( broker.getBrokerID(), serviceName, customLabel[ j ] ).set( so.getServerAct() );
+						nServiceConvHigh.labels         ( broker.getBrokerID(), serviceName, customLabel[ j ] ).set( so.getConvHigh() );
+						nServiceConvPending.labels      ( broker.getBrokerID(), serviceName, customLabel[ j ] ).set( so.getConvPending() );
+						nServiceConvPendingHigh.labels  ( broker.getBrokerID(), serviceName, customLabel[ j ] ).set( so.getConvPendingHigh() );
+						nServiceConvActive.labels       ( broker.getBrokerID(), serviceName, customLabel[ j ] ).set( so.getConvAct() );
+						nServiceWaitsOfServers.labels   ( broker.getBrokerID(), serviceName, customLabel[ j ] ).set( so.getNumWaits() );
+						nServiceOccupiedServers.labels  ( broker.getBrokerID(), serviceName, customLabel[ j ] ).set( so.getNumOccupied() );
+						nServiceUOWsActive.labels       ( broker.getBrokerID(), serviceName, customLabel[ j ] ).set( so.getUOWSAct() );
+						nServiceUOWsMax.labels          ( broker.getBrokerID(), serviceName, customLabel[ j ] ).set( so.getUOWSMax() );
+					}
+					else {
+						nServiceRequests.labels         ( broker.getBrokerID(), serviceName ).set( so.getRequests() );
+						nServiceServer.labels           ( broker.getBrokerID(), serviceName ).set( so.getServerAct() );
+						nServiceConvHigh.labels         ( broker.getBrokerID(), serviceName ).set( so.getConvHigh() );
+						nServiceConvPending.labels      ( broker.getBrokerID(), serviceName ).set( so.getConvPending() );
+						nServiceConvPendingHigh.labels  ( broker.getBrokerID(), serviceName ).set( so.getConvPendingHigh() );
+						nServiceConvActive.labels       ( broker.getBrokerID(), serviceName ).set( so.getConvAct() );
+						nServiceWaitsOfServers.labels   ( broker.getBrokerID(), serviceName ).set( so.getNumWaits() );
+						nServiceOccupiedServers.labels  ( broker.getBrokerID(), serviceName ).set( so.getNumOccupied() );						
+						nServiceUOWsActive.labels       ( broker.getBrokerID(), serviceName ).set( so.getUOWSAct() );
+						nServiceUOWsMax.labels          ( broker.getBrokerID(), serviceName ).set( so.getUOWSMax() );
+					}
 				}
 			}
 		}
@@ -185,9 +216,14 @@ public class BrokerDataCollector {
 			nServiceConvActive.clear();
 			nServiceWaitsOfServers.clear();
 			nServiceOccupiedServers.clear();
+			nServiceUOWsActive.clear();
+			nServiceUOWsMax.clear();
 		}
-		catch (Throwable e ) {
-			
+		catch (Throwable e ) {			
 		}
+	}
+
+	private boolean isCustomLabelNameValid() {
+		return customLabelName4Services != null && customLabelName4Services.length() > 0;
 	}
 }
