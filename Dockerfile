@@ -1,4 +1,6 @@
-FROM maven
+FROM maven AS build
+
+COPY ./settings.xml /root/.m2/settings.xml
 
 RUN git clone https://github.com/thomas-2020/entirex-broker-metrics-exporter.git
 
@@ -8,9 +10,19 @@ RUN mvn install:install-file -Dfile=./entirex-broker-metrics-exporter/libs/exx10
 
 RUN cd entirex-broker-metrics-exporter ; mvn install
 
-RUN mv /entirex-broker-metrics-exporter/application.properties                                    /
-RUN mv /entirex-broker-metrics-exporter/target/entirex-broker-metrics-exporter-0.0.1-SNAPSHOT.jar /
-RUN rm -fR /entirex-broker-metrics-exporter
-RUN rm -fR /.m2
+# ... build is finished
+# ---------------------
+# start runtime ...
+ 
+FROM ubuntu:latest
+
+RUN apt-get update \ 
+    && apt-get install openjdk-21-jre -y
+
+COPY --from=build /entirex-broker-metrics-exporter/application.properties /
+COPY --from=build /entirex-broker-metrics-exporter/target/entirex-broker-metrics-exporter-0.0.1-SNAPSHOT.jar /
+
+# ToDo: Set non-root user for running ...
+# USER sagadmin
 
 ENTRYPOINT ["java", "-jar", "/entirex-broker-metrics-exporter-0.0.1-SNAPSHOT.jar"]
