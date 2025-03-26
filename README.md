@@ -28,50 +28,80 @@ The server requires properties and these are reading from `application.propertie
 * `user`: Use the username to login to EntireX Broker
 * `excludeServerClass`: Exclude metrics of services which has the server class name
 * `formatServiceName`: Format of service name l(ong)=CLASS/SERVICE/SERVER s(hort)=SERVICE
-* `customLabelName4Services`: Set a custom label for services. Default is `package`.
-* `mapServiceToLabelValueList`: Map service to label value of custom label, e.g. "service1=labelvalue1;service2=labelvalue2"
+* `customLabelName4Services`: Set a custom label for services. Let it blank (emtpy string) if you don't need custom labels.
+* `mapServiceToLabelValueList`: Map service to label value of custom label, e.g. `service1=labelvalue1;service2=labelvalue2`
 
-## Extra or Custom Label for Services
+## Extra or Custom Label for EntireX Broker Services
 
-To align services to other metrics, you can set own extra or custom label on services. The default label name is `package` defined in `application.properties`. E.g. if your service has the name `RPCMAT` and in Integration Server is a package `Material` with an adapter services which use the EntireX service, set the values `RPCMAT=Material` in `mapServiceToLabelValueList`. Than all metrics of `RPCMAT` will have the label `package=Material`.
+To align EntireX Broker services to other metrics in a dashboard, you can set own extra or *custom* label on EntireX Broker services. E.g., if your EntireX Broker service has the name `RPCMAT` and in Integration Server exists a package `Material` with an adapter services, set or add the value `RPCMAT=Material` in `mapServiceToLabelValueList`. Than, all metrics of `RPCMAT` will have the label `package=Material`. Now, you can create a `Material` dashboard panel with Entirex Broker and Integration Server metrics.
 
-## Using Environment Variable
+**Tip** in order to do this, you should install the [WxPrometheus]() and family IS packages.
 
-The Springboot Framework can pass environment variable to application properties. This feature is used for Broker ID. The `application.property` file contains ...
+## Using Environment Variable default Application Properties
+
+The Springboot Framework can pass environment variable to application properties. The default [application.property](/application.property) file contains ...
 
 ```
+# Connect to Broker ...
 brokerID=${BROKER}
+
+# Use user ID ...
+user=data-collector
+
+# Poll metrics every ms ...
+refreshInterval=15000
+
+# Exclude metrics of services which has the server class name ...
+excludeServerClass=SAG
+
+# Format of service name l(ong)=CLASS/SERVICE/SERVER s(hort)=SERVICE ...
+formatServiceName=s
+
+# Add this label to services. Let it blank (emtpy string) if you don't need custom labels.
+customLabelName4Services=${customLabelName4Services}
+
+# Map service to label value of custom label, e.g. "service1=labelvalue1;service2=labelvalue2"
+mapServiceToLabelValueList=${mapServiceToLabelValueList}
 ```
-and therefore set the environment variable `BROKER` with value.
+
+... and therefore, set the environment variable `BROKER`, `customLabelName4Services`, `mapServiceToLabelValueList` with a value.
   
 ## Start Server
 
-Use `java -jar target/entirex-broker-metrics-exporter-0.0.1-SNAPSHOT.jar`
+Set the environment variables mentioned before and start ... 
+
+```
+java -jar target/entirex-broker-metrics-exporter-0.0.1-SNAPSHOT.jar
+```
+
+**Note**, the `application.properties` is reading from the current folder.
 
 ## Build Container
 
-To build a container for EntireX Broker Exporter, you can use the `Dockerfile`.
+To build a container for EntireX Broker Exporter, you can use the [Dockerfile](./Dockerfile).
 
 ```
 docker build -t entirex-broker-exporter:latest .
 ```
 
+**Note for security**: Change [Dockerfile](./Dockerfile) to run the Tomcat Server inside container as non-root.
+
 ## Run Container
 
-To run the build, start following command to export metrics from `myBroker` ...
+To run the build, start following command to export metrics from `myBroker:1971` ...
 
 ```
-docker run -it -e BROKER=myBroker -p 8080:8080 entirex-broker-exporter:latest
+docker run -it --rm -e BROKER=myBroker:1971 -e customLabelName4Services= -e mapServiceToLabelValueList= -p 8080:8080 entirex-broker-exporter:latest
 ```
 
-Prometheus can poll now the metrics from `localhost:8080/metrics`.
+The Prometheus server can poll now the metrics from `localhost:8080/metrics`.
 
 ## Deploy Container to Kubernetes using Helm Chart
 
 To deploy the container to Kubernetes, it is possible to use the Helm Chart (in sub-folder `helm`).
 
 ```
-helm upgrade --install my-exporter helm -n my-namespace --set image.repository=pswminnocontainerref.azurecr.io/exx/entirex-broker-exporter --set broker=myBroker
+helm upgrade --install my-exporter helm -n my-namespace --set image.repository=entirex-broker-exporter --set broker=myBroker:1971
 ```
 
 ## Add Helm Chart Repository
