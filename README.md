@@ -35,7 +35,7 @@ The server requires properties and these are reading from `application.propertie
 
 To align EntireX Broker services to other metrics in a dashboard, you can set own extra or *custom* label on EntireX Broker services. E.g., if your EntireX Broker service has the name `RPCMAT` and in Integration Server exists a package `Material` with an adapter services, set or add the value `RPCMAT=Material` in `mapServiceToLabelValueList`. Than, all metrics of `RPCMAT` will have the label `package=Material`. Now, you can create a `Material` dashboard panel with Entirex Broker and Integration Server metrics.
 
-**Tip** in order to do this, you should install the [WxPrometheus]() and family IS packages.
+**Tip** in order to do this, you should install the [WxPrometheus](https://github.com/IBM/WxPrometheus) and family IS packages.
 
 ## Using Environment Variable default Application Properties
 
