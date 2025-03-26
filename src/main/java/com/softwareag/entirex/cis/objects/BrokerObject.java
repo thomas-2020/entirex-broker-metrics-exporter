@@ -3,6 +3,9 @@ package com.softwareag.entirex.cis.objects;
 import com.softwareag.entirex.aci.*;
 import com.softwareag.entirex.cis.*;
 import com.softwareag.entirex.cis.utils.*;
+import com.softwareag.entirex.cis.params.InterfaceVersion;
+import com.softwareag.entirex.cis.params.ObjectType;
+
 import java.math.*;
 
 public class BrokerObject
@@ -108,9 +111,11 @@ public class BrokerObject
     private static final int O_CDEFERRED = 119;
     private static final int L_CDEFERRED = 1;
 
+    private static final int L_BROKER_OBJECT = O_CDEFERRED + L_CDEFERRED;
 
-    private static final int L_BROKER_OBJECT = 92;
-
+    public static final InterfaceVersion IV = InterfaceVersion.VERSION_2; //Implemented Interface Version
+    public static final ObjectType       OT = ObjectType.BROKER;
+    
     public BrokerObject()
     	{
     	}

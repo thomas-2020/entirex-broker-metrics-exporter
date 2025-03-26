@@ -37,6 +37,16 @@ public class ObjectType
     public static final ObjectType TOPIC       = new ObjectType( new byte[] { (byte)0x00, (byte) 17 } );
     public static final ObjectType PARTICIPANT = new ObjectType( new byte[] { (byte)0x00, (byte) 18 } );
 
+    //POOL_USAGE     = 25 Info on Broker pool usage and dynamic memory management. (Prio 2)
+    public static final ObjectType POOL_USAGE      = new ObjectType( new byte[] { (byte)0x00, (byte) 25 } );
+
+    //RESOURCE_USAGE = 26 Info on Broker resource usage                            (Prio 1)
+    public static final ObjectType RESOURCE_USAGE  = new ObjectType( new byte[] { (byte)0x00, (byte) 26 } );
+
+    //STATISTICS     = 27 Statistics on selected Broker resources.                 (Prio 3)
+    public static final ObjectType STATISTICS      = new ObjectType( new byte[] { (byte)0x00, (byte) 27 } );
+    
+    
     private ObjectType(byte[] abSetting)
     	{
 		super(abSetting);
@@ -81,6 +91,12 @@ public class ObjectType
 			return PublicationObject.class;
 		else if ( objectType == ObjectType.TOPIC )
 			return TopicObject.class;
+		else if ( objectType == ObjectType.POOL_USAGE )
+			return PoolUsageObject.class;
+		else if ( objectType == ObjectType.RESOURCE_USAGE )
+			return ResourceUsageObject.class;
+		else if ( objectType == ObjectType.STATISTICS )
+			return StatisticsObject.class;
 
 		throw new RuntimeException( "EXXCIS object type is not implemented" );
         }

@@ -20,6 +20,8 @@ import com.softwareag.entirex.cis.IServiceResponse;
 import com.softwareag.entirex.cis.InfoServiceMessage;
 import com.softwareag.entirex.cis.ServiceRequest;
 import com.softwareag.entirex.cis.objects.ServiceObject;
+import com.softwareag.entirex.cis.objects.BrokerObject;
+import com.softwareag.entirex.cis.objects.ResourceUsageObject;
 import com.softwareag.entirex.cis.params.BlockLength;
 import com.softwareag.entirex.cis.params.InterfaceVersion;
 import com.softwareag.entirex.cis.params.ObjectType;
@@ -115,6 +117,7 @@ public class BrokerDataCollector {
 	private String mapServiceToLabelValueList;
 	private HashMap<String, String> mapServiceToLabelValue = new HashMap<String, String>();
 
+	private static boolean enableResourceUsagePolling = true;
 
 	@Scheduled(fixedRateString = "${refreshInterval}", initialDelayString = "${refreshInterval}")
 	private void doPull() {
@@ -123,7 +126,18 @@ public class BrokerDataCollector {
 				broker = new Broker( brokerID, user );
 				broker.logon();
 			}
-			pollMetrics_Services( broker );
+			pollMetrics_Services     ( broker );
+			pollMetrics_Broker       ( broker );
+			
+			try {
+				if ( enableResourceUsagePolling )
+				pollMetrics_ResourceUsage( broker );
+			}
+			catch ( Throwable e ) {
+				enableResourceUsagePolling = false;
+				throw e;
+			}
+
 			nBrokerStatus.labels( brokerID ).set( 1 );
 		}
 		catch ( Throwable e ) {
@@ -134,11 +148,14 @@ public class BrokerDataCollector {
 		}
 	}
 
+	/*
+	 * Poll metrics for services
+	 */
 	private void pollMetrics_Services( Broker broker ) throws Throwable {
 		InfoServiceMessage info = new InfoServiceMessage();
-		info.setInterfaceVersion( InterfaceVersion.VERSION_2 );
+		info.setInterfaceVersion( ServiceObject.IV );
 		info.setBlockLength     ( new BlockLength( 7200 ) );
-		info.setObjectType      ( ObjectType.SERVICE );
+		info.setObjectType      ( ServiceObject.OT );
 		ServiceRequest      req = new ServiceRequest( broker, info );
 		IServiceResponse    res = req.sendReceive();
 		for ( int i = 0; i < res.getCommonHeader().getCurrentNumObjects(); i++ ) {
@@ -226,4 +243,37 @@ public class BrokerDataCollector {
 	private boolean isCustomLabelNameValid() {
 		return customLabelName4Services != null && customLabelName4Services.length() > 0;
 	}
+
+	/*
+	 * Poll metrics for Broker
+	 */
+	private void pollMetrics_Broker( Broker broker ) throws Throwable {
+		InfoServiceMessage info = new InfoServiceMessage();
+		info.setInterfaceVersion( BrokerObject.IV );
+		info.setBlockLength     ( new BlockLength( 7200 ) );
+		info.setObjectType      ( BrokerObject.OT );
+		ServiceRequest      req = new ServiceRequest( broker, info );
+		IServiceResponse    res = req.sendReceive();
+		for ( int i = 0; i < res.getCommonHeader().getCurrentNumObjects(); i++ ) {
+			BrokerObject bo = (BrokerObject) res.getServiceResponseObject( i );
+			//logger.info( bo.toString() );
+		}
+	}
+	
+	/*
+	 * Poll metrics for Resource Usage
+	 */
+	private void pollMetrics_ResourceUsage( Broker broker ) throws Throwable {
+		InfoServiceMessage info = new InfoServiceMessage();
+		info.setInterfaceVersion( ResourceUsageObject.IV );
+		info.setBlockLength     ( new BlockLength( 7200 ) );
+		info.setObjectType      ( ResourceUsageObject.OT );
+		ServiceRequest      req = new ServiceRequest( broker, info );
+		IServiceResponse    res = req.sendReceive();
+		for ( int i = 0; i < res.getCommonHeader().getCurrentNumObjects(); i++ ) {
+			ResourceUsageObject bo = (ResourceUsageObject) res.getServiceResponseObject( i );
+			//logger.info( bo.toString() );
+		}
+	}
+	
 }

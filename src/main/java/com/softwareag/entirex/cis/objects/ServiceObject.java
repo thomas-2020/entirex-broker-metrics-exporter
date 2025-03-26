@@ -17,6 +17,8 @@ import com.softwareag.entirex.aci.*;
 import com.softwareag.entirex.cis.*;
 import java.math.*;
 import com.softwareag.entirex.cis.utils.*;
+import com.softwareag.entirex.cis.params.InterfaceVersion;
+import com.softwareag.entirex.cis.params.ObjectType;
 
 public class ServiceObject
     extends AbstractServiceResponseObject
@@ -144,6 +146,9 @@ public class ServiceObject
     private static final int L_NOT_USED            = 1;
 
 	private static final int L_SERVICE_OBJECT      = O_NOT_USED + L_NOT_USED;
+
+    public static final InterfaceVersion IV = InterfaceVersion.VERSION_2; //Implemented Interface Version
+    public static final ObjectType       OT = ObjectType.SERVICE;
 
 	public ServiceObject()
 		{
