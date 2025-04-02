@@ -37,6 +37,11 @@ public class ObjectType
     public static final ObjectType TOPIC       = new ObjectType( new byte[] { (byte)0x00, (byte) 17 } );
     public static final ObjectType PARTICIPANT = new ObjectType( new byte[] { (byte)0x00, (byte) 18 } );
 
+    //TCP 	19 	Info on TCP communicators
+    public static final ObjectType TCP         = new ObjectType( new byte[] { (byte)0x00, (byte) 19 } );
+    //SSL 	22 	Info on SSL communicators
+    public static final ObjectType SSL         = new ObjectType( new byte[] { (byte)0x00, (byte) 22 } );
+    
     //POOL_USAGE     = 25 Info on Broker pool usage and dynamic memory management. (Prio 2)
     public static final ObjectType POOL_USAGE      = new ObjectType( new byte[] { (byte)0x00, (byte) 25 } );
 
@@ -45,7 +50,10 @@ public class ObjectType
 
     //STATISTICS     = 27 Statistics on selected Broker resources.                 (Prio 3)
     public static final ObjectType STATISTICS      = new ObjectType( new byte[] { (byte)0x00, (byte) 27 } );
-    
+
+    //WORKER_USAGE   = 30 nfo on usage of worker tasks and dynamic worker management.                 (Prio 3)
+    public static final ObjectType WORKER_USAGE    = new ObjectType( new byte[] { (byte)0x00, (byte) 30 } );
+
     
     private ObjectType(byte[] abSetting)
     	{
