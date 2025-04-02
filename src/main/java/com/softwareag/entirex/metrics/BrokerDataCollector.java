@@ -22,6 +22,7 @@ import com.softwareag.entirex.cis.ServiceRequest;
 import com.softwareag.entirex.cis.objects.ServiceObject;
 import com.softwareag.entirex.cis.objects.BrokerObject;
 import com.softwareag.entirex.cis.objects.ResourceUsageObject;
+import com.softwareag.entirex.cis.objects.WorkerObject;
 import com.softwareag.entirex.cis.params.BlockLength;
 import com.softwareag.entirex.cis.params.InterfaceVersion;
 import com.softwareag.entirex.cis.params.ObjectType;
@@ -155,9 +156,11 @@ public class BrokerDataCollector {
 			if ( broker == null ) {
 				broker = new Broker( brokerID, user );
 				broker.logon();
+				//broker.setTrace( 2 );
 			}
 			pollMetrics_Services     ( broker );
 			pollMetrics_Broker       ( broker );
+			//pollMetrics_Worker       ( broker ); //corrently not uses
 			
 			try {
 				if ( enableResourceUsagePolling )
@@ -310,14 +313,31 @@ public class BrokerDataCollector {
 	private void pollMetrics_ResourceUsage( Broker broker ) throws Throwable {
 		InfoServiceMessage info = new InfoServiceMessage();
 		info.setInterfaceVersion( ResourceUsageObject.IV );
+		info.setInterfaceVersion( InterfaceVersion.VERSION_11 ); //for testing
 		info.setBlockLength     ( new BlockLength( 7200 ) );
 		info.setObjectType      ( ResourceUsageObject.OT );
 		ServiceRequest      req = new ServiceRequest( broker, info );
 		IServiceResponse    res = req.sendReceive();
 		for ( int i = 0; i < res.getCommonHeader().getCurrentNumObjects(); i++ ) {
 			ResourceUsageObject bo = (ResourceUsageObject) res.getServiceResponseObject( i );
-			//logger.info( bo.toString() );
+			logger.info( bo.toString() );
 		}
 	}
-	
+
+	/*
+	 * Poll metrics for Worker
+	 */
+	private void pollMetrics_Worker( Broker broker ) throws Throwable {
+		InfoServiceMessage info = new InfoServiceMessage();
+		info.setInterfaceVersion( WorkerObject.IV );
+		info.setBlockLength     ( new BlockLength( 7200 ) );
+		info.setObjectType      ( WorkerObject.OT );
+		ServiceRequest      req = new ServiceRequest( broker, info );
+		IServiceResponse    res = req.sendReceive();
+		for ( int i = 0; i < res.getCommonHeader().getCurrentNumObjects(); i++ ) {
+			WorkerObject bo = (WorkerObject) res.getServiceResponseObject( i );
+			logger.info( bo.toString() );
+		}
+	}
+
 }
