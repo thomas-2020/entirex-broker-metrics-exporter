@@ -3,6 +3,9 @@ package com.softwareag.entirex.cis.objects;
 import com.softwareag.entirex.aci.*;
 import com.softwareag.entirex.cis.*;
 import com.softwareag.entirex.cis.utils.*;
+import com.softwareag.entirex.cis.params.InterfaceVersion;
+import com.softwareag.entirex.cis.params.ObjectType;
+
 import java.math.*;
 
 public class WorkerObject
@@ -21,6 +24,9 @@ public class WorkerObject
     private static final int L_IDLE_SUM = 4;
 
     private static final int L_WORKER_OBJECT = 12;
+
+    public static final InterfaceVersion IV = InterfaceVersion.VERSION_1; //Implemented Interface Version
+    public static final ObjectType       OT = ObjectType.WORKER;
 
     public WorkerObject()
 	    {
