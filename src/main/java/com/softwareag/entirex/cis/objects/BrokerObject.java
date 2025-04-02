@@ -111,9 +111,63 @@ public class BrokerObject
     private static final int O_CDEFERRED = 119;
     private static final int L_CDEFERRED = 1;
 
-    private static final int L_BROKER_OBJECT = O_CDEFERRED + L_CDEFERRED;
+    // Starting CIS Interface Version 3 ...
+    //CACCOUNTING 	        A3 	3 	NO 	Accounting not active YES Accounting active on UNIX and Windows nnn SMF Record number on z/OS
+    private static final int L_CACCOUNTING = 3;
+    private static final int O_CACCOUNTING = 120;
 
-    public static final InterfaceVersion IV = InterfaceVersion.VERSION_2; //Implemented Interface Version
+    //CAUTHDEFAULT 	        I1 	3 	Authorization Default: 0 NO 1 YES
+    private static final int L_CAUTHDEFAULT = 1;
+    private static final int O_CAUTHDEFAULT = O_CACCOUNTING + L_CACCOUNTING;
+
+    //LSSLPORT 	            I4 	3 	Port number being used for SSL transport (UNIX and Windows only).
+    private static final int L_LSSLPORT = 4;
+    private static final int O_LSSLPORT = O_CAUTHDEFAULT + L_CAUTHDEFAULT;
+
+    //NEW-UOW-MESSAGES 	    I1 	3 	New UOW messages: 0 NO 1 YES
+    private static final int L_NEW_UOW_MESSAGES = 1;
+    private static final int O_NEW_UOW_MESSAGES = O_LSSLPORT + L_LSSLPORT;
+    
+    //UNUSED2 	            I1 	3 	Unused.
+    private static final int L_UNUSED2 = 1;
+    private static final int O_UNUSED2 = O_NEW_UOW_MESSAGES + L_NEW_UOW_MESSAGES;
+    
+    //CPLATNAME 	        A32 	3 	Full platform name where Broker is running
+    private static final int L_CPLATNAME = 32;
+    private static final int O_CPLATNAME = O_UNUSED2 + L_UNUSED2 + 2;
+
+    //CPSTORETYPE 	        A8 	3 	Persistent store type. It will be one of the following values: DIV Data-in-Virtual Persistent Store (z/OS only) FILE B-Tree Store (UNIX and Windows only, no longer supported) ADABAS Adabas Persistent Store (all platforms)
+    private static final int L_CPSTORETYPE = 8;
+    private static final int O_CPSTORETYPE = O_CPLATNAME + L_CPLATNAME;
+
+    // Starting CIS Interface Version 4 ...
+    //HIGHEST-API-VERSION 	I1 	4 	For example: 0x06.
+    private static final int L_HIGHEST_API_VERSION = 1;
+    private static final int O_HIGHEST_API_VERSION = O_CPSTORETYPE + L_CPSTORETYPE + 1;
+
+    //HIGHEST-CIS-VERSION 	I1 	4 	For example: 0x06.
+    private static final int L_HIGHEST_CIS_VERSION = 1;
+    private static final int O_HIGHEST_CIS_VERSION = O_HIGHEST_API_VERSION + L_HIGHEST_API_VERSION;
+
+    //PSTORE-CONNECTED 	    I1 	4 0 NO 1 YES
+    private static final int L_PSTORE_CONNECTED = 1;
+    private static final int O_PSTORE_CONNECTED = O_HIGHEST_CIS_VERSION + L_HIGHEST_CIS_VERSION;
+    
+    //ATTACH-MGRS-ACT 	    I4 	4 	Number of attach servers active.
+    private static final int L_ATTACH_MGRS_ACT = 4;
+    private static final int O_ATTACH_MGRS_ACT = O_PSTORE_CONNECTED + L_PSTORE_CONNECTED;
+    
+    //LUWSTAT-ADD-TIME 	    I4 	4 	Unit of work status additional lifetime.
+    private static final int L_LUWSTAT_ADD_TIME = 4;
+    private static final int O_LUWSTAT_ADD_TIME = O_ATTACH_MGRS_ACT + L_ATTACH_MGRS_ACT;
+    
+    //PRODUCT-VERSION 	    A16 	4 	Version, release, service pack, and patch level, e.g. 8.0.1.00.
+    private static final int L_PRODUCT_VERSION = 16;
+    private static final int O_PRODUCT_VERSION = O_LUWSTAT_ADD_TIME + L_LUWSTAT_ADD_TIME + 10*4;
+
+    private static final int L_BROKER_OBJECT = O_PRODUCT_VERSION + L_PRODUCT_VERSION; // CIS 2: O_CDEFERRED + L_CDEFERRED;
+
+    public static final InterfaceVersion IV = InterfaceVersion.VERSION_4; //Implemented Interface Version
     public static final ObjectType       OT = ObjectType.BROKER;
     
     public BrokerObject()
@@ -125,6 +179,11 @@ public class BrokerObject
     {
         super(abResponse, iOff, iLen);
     }
+
+	public InterfaceVersion getInterfaceVersion()
+	{
+		return IV;
+	}
 
     public int getLength()
     {
@@ -248,52 +307,77 @@ public class BrokerObject
 
     public int getCStore()
     {
-        return (iLen > L_BROKER_OBJECT) ? new BigInteger(Utils.getSubArray(abResponse, O_CSTORE + iOff, L_CSTORE)).intValue() : -1;
+        return new BigInteger(Utils.getSubArray(abResponse, O_CSTORE + iOff, L_CSTORE)).intValue();
     }
 
     public int getLMaxUOWS()
     {
-        return (iLen > L_BROKER_OBJECT) ? new BigInteger(Utils.getSubArray(abResponse, O_LMAXUOWS + iOff, L_LMAXUOWS)).intValue() : -1;
+        return new BigInteger(Utils.getSubArray(abResponse, O_LMAXUOWS + iOff, L_LMAXUOWS)).intValue();
     }
 
     public int getLMaxUOWMsg()
     {
-        return (iLen >= L_BROKER_OBJECT) ? new BigInteger(Utils.getSubArray(abResponse, O_LMAXUOWMSG + iOff, L_LMAXUOWMSG)).intValue() : -1;
+        return new BigInteger(Utils.getSubArray(abResponse, O_LMAXUOWMSG + iOff, L_LMAXUOWMSG)).intValue();
     }
 
     public int getCPStore()
     {
-        return (iLen > L_BROKER_OBJECT) ? new BigInteger(Utils.getSubArray(abResponse, O_CPSTORE + iOff, L_CPSTORE)).intValue() : -1;
+        return new BigInteger(Utils.getSubArray(abResponse, O_CPSTORE + iOff, L_CPSTORE)).intValue();
     }
 
     public int getCUWStatP()
     {
-        return (iLen > L_BROKER_OBJECT) ? new BigInteger(Utils.getSubArray(abResponse, O_CUWSTATP + iOff, L_CUWSTATP)).intValue() : -1;
+        return new BigInteger(Utils.getSubArray(abResponse, O_CUWSTATP + iOff, L_CUWSTATP)).intValue();
     }
 
     public int getLUWTime()
     {
-        return (iLen > L_BROKER_OBJECT) ? new BigInteger(Utils.getSubArray(abResponse, O_LUWTIME + iOff, L_LUWTIME)).intValue() : -1;
+        return new BigInteger(Utils.getSubArray(abResponse, O_LUWTIME + iOff, L_LUWTIME)).intValue();
     }
 
     public int getLMaxDELCNT()
     {
-        return (iLen > L_BROKER_OBJECT) ? new BigInteger(Utils.getSubArray(abResponse, O_LMAXDELCNT + iOff, L_LMAXDELCNT)).intValue() : -1;
+        return new BigInteger(Utils.getSubArray(abResponse, O_LMAXDELCNT + iOff, L_LMAXDELCNT)).intValue();
     }
 
     public int getLMaxMsgSize()
     {
-        return (iLen > L_BROKER_OBJECT) ? new BigInteger(Utils.getSubArray(abResponse, O_LMAXMSGSIZE + iOff, L_LMAXMSGSIZE)).intValue() : -1;
+        return new BigInteger(Utils.getSubArray(abResponse, O_LMAXMSGSIZE + iOff, L_LMAXMSGSIZE)).intValue();
     }
 
     public int getCDeferred()
     {
-        return (iLen > L_BROKER_OBJECT) ? new BigInteger(Utils.getSubArray(abResponse, O_CDEFERRED + iOff, L_CDEFERRED)).intValue() : -1;
+        return new BigInteger(Utils.getSubArray(abResponse, O_CDEFERRED + iOff, L_CDEFERRED)).intValue();
     }
 
     public int getLTotalUOWS()
     {
-        return (iLen > L_BROKER_OBJECT) ? new BigInteger(Utils.getSubArray(abResponse, O_LTOTALUOWS + iOff, L_LTOTALUOWS)).intValue() : -1;
+        return new BigInteger(Utils.getSubArray(abResponse, O_LTOTALUOWS + iOff, L_LTOTALUOWS)).intValue();
+    }
+
+    public int getHighestAPIVersion()
+    {
+        return new BigInteger(Utils.getSubArray(abResponse, O_HIGHEST_API_VERSION + iOff, L_HIGHEST_API_VERSION)).intValue();
+    }
+
+    public int getHighestCISVersion()
+    {
+        return new BigInteger(Utils.getSubArray(abResponse, O_HIGHEST_CIS_VERSION + iOff, L_HIGHEST_CIS_VERSION)).intValue();
+    }
+
+    public String getProductVersion()
+    {
+    	return new String( Utils.getSubArray(abResponse, O_PRODUCT_VERSION + iOff, L_PRODUCT_VERSION) ).trim();
+    }
+
+    public String getPlatformName()
+    {
+    	return new String( Utils.getSubArray(abResponse, O_CPLATNAME + iOff, L_CPLATNAME) ).trim();
+    }
+
+    public String getPStoreType()
+    {
+    	return new String( Utils.getSubArray(abResponse, O_CPSTORETYPE + iOff, L_CPSTORETYPE) ).trim();
     }
 
     public String toString()
@@ -333,6 +417,11 @@ public class BrokerObject
             "   LMAXMSGSIZE   : " + getLMaxMsgSize() + "\n" +
             "   CDEFERRED     : " + getCDeferred() + "\n" +
             "   LTOTALUOWS    : " + getLTotalUOWS() + "\n" +
+            "   PLATNAME      : " + getPlatformName() + "\n" +
+            "   PSTORETYPE    : " + getPStoreType() + "\n" +
+            "   API_VERSION   : " + getHighestAPIVersion() + "\n" +
+            "   CIS_VERSION   : " + getHighestCISVersion() + "\n" +
+            "   PRODUCT_VERS  : " + getProductVersion() + "\n" +
             "]";
     }
 }
