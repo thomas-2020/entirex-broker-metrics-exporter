@@ -18,9 +18,9 @@ public class ResourceUsageObject
     private static final int L_TOTAL_STORAGE_ALLOCATED             = 4; //Size of allocated storage in bytes.
     private static final int O_TOTAL_STORAGE_ALLOCATED             = 0;
     private static final int L_TOTAL_STORAGE_ALLOCATED_HIGH        = 4; //Highest size of allocated storage in bytes since Broker started.
-    private static final int O_TOTAL_STORAGE_ALLOCATED_HIGH        = O_TOTAL_STORAGE_ALLOCATED + L_TOTAL_STORAGE_ALLOCATED_HIGH;
+    private static final int O_TOTAL_STORAGE_ALLOCATED_HIGH        = O_TOTAL_STORAGE_ALLOCATED + L_TOTAL_STORAGE_ALLOCATED;
     private static final int L_TOTAL_STORAGE_LIMIT                 = 4; //Maximum of storage that can be allocated (broker attribute MAX_MEMORY).
-    private static final int O_TOTAL_STORAGE_LIMIT                 = O_TOTAL_STORAGE_ALLOCATED_HIGH + L_TOTAL_STORAGE_LIMIT;
+    private static final int O_TOTAL_STORAGE_LIMIT                 = O_TOTAL_STORAGE_ALLOCATED_HIGH + L_TOTAL_STORAGE_ALLOCATED_HIGH;
     private static final int L_ACCOUNTING_BUFFERS_ALLOCATED        = 4; //ACCOUNTING: Number of buffers allocated.
     private static final int L_ACCOUNTING_BUFFERS_FREE             = 4; //ACCOUNTING: Number of buffers free.
     private static final int L_ACCOUNTING_BUFFERS_USED             = 4; //ACCOUNTING: Number of buffers used.
@@ -96,6 +96,11 @@ public class ResourceUsageObject
     {
         super(abResponse, iOff, iLen);
     }
+
+	public InterfaceVersion getInterfaceVersion()
+	{
+		return InterfaceVersion.VERSION_7;
+	}
 
     public int getLength()
     {
