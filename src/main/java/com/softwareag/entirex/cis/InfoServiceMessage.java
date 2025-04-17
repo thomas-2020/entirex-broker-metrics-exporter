@@ -124,9 +124,9 @@ public class InfoServiceMessage
         checkCompleteness();
 
         /*
-         * 428 + Topic(96) + publicationId(16) + subscriptionType(2) + NotUsed_4(2)
+         * 428 + Topic(96) + publicationId(16) + subscriptionType(2) + NotUsed_4(2) + Magic(4)
          */
-        byte[] msg = new byte[ 428 + 96 + 16+ 2 + 2 ];
+        byte[] msg = new byte[ 428 + 96 + 16+ 2 + 2 + 4 ];
 
         Utils.copy(msg, 0, blockLength.getValue());
         Utils.copy(msg, 4, version.getValue());
