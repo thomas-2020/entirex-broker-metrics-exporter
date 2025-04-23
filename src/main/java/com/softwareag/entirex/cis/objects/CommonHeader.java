@@ -69,8 +69,15 @@ public class CommonHeader implements ICommonHeader
 
 	public int getLength()
 		{
-		return InterfaceVersion.VERSION_4 == interfaceVersion ? L_COMMON_HEADER_LENGTH + 8
-				: L_COMMON_HEADER_LENGTH;
+		if ( interfaceVersion == InterfaceVersion.VERSION_3 || interfaceVersion == InterfaceVersion.VERSION_2 || interfaceVersion == InterfaceVersion.VERSION_1 )
+			return L_COMMON_HEADER_LENGTH;
+		if ( interfaceVersion == InterfaceVersion.VERSION_4 )
+			return L_COMMON_HEADER_LENGTH + 8;
+		if ( interfaceVersion == InterfaceVersion.VERSION_5 )
+			return L_COMMON_HEADER_LENGTH + 8 + 8 + 40;
+
+		//Higher than 5 
+		return L_COMMON_HEADER_LENGTH + 8 + 8 + 40 + 4 + 4 + 4;
 		}
 
 	public int getErrorCode()
