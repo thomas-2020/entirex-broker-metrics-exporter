@@ -22,9 +22,13 @@ public class ResourceUsageObject
     private static final int L_TOTAL_STORAGE_LIMIT                 = 4; //Maximum of storage that can be allocated (broker attribute MAX_MEMORY).
     private static final int O_TOTAL_STORAGE_LIMIT                 = O_TOTAL_STORAGE_ALLOCATED_HIGH + L_TOTAL_STORAGE_ALLOCATED_HIGH;
     private static final int L_ACCOUNTING_BUFFERS_ALLOCATED        = 4; //ACCOUNTING: Number of buffers allocated.
+    private static final int O_ACCOUNTING_BUFFERS_ALLOCATED        = O_TOTAL_STORAGE_LIMIT + L_TOTAL_STORAGE_LIMIT;
     private static final int L_ACCOUNTING_BUFFERS_FREE             = 4; //ACCOUNTING: Number of buffers free.
+    private static final int O_ACCOUNTING_BUFFERS_FREE             = O_ACCOUNTING_BUFFERS_ALLOCATED + L_ACCOUNTING_BUFFERS_ALLOCATED;
     private static final int L_ACCOUNTING_BUFFERS_USED             = 4; //ACCOUNTING: Number of buffers used.
+    private static final int O_ACCOUNTING_BUFFERS_USED             = O_ACCOUNTING_BUFFERS_FREE + L_ACCOUNTING_BUFFERS_FREE;
     private static final int L_BLACKLIST_ENTRIES_ALLOCATED         = 4; //BLACKLIST: Number of entries allocated.
+    private static final int O_BLACKLIST_ENTRIES_ALLOCATED         = O_ACCOUNTING_BUFFERS_USED + L_ACCOUNTING_BUFFERS_USED;
     private static final int L_BLACKLIST_ENTRIES_FREE              = 4; //BLACKLIST: Number of entries free.
     private static final int L_BLACKLIST_ENTRIES_USED              = 4; //BLACKLIST: Number of entries used.
     private static final int L_BROKER_TO_BROKER_ENTRIES_ALLOCATED  = 4; //BROKER_TO_BROKER: Number of entries allocated.
@@ -82,7 +86,7 @@ public class ResourceUsageObject
     private static final int L_WORK_QUEUE_ENTRIES_FREE             = 4; //WORK_QUEUE: Number of entries free.
     private static final int L_WORK_QUEUE_ENTRIES_USED             = 4; //WORK_QUEUE: Number of entries used. 
 
-    private static final int L_OBJECT = 66 * 4;
+    private static final int L_OBJECT = 63 * 4;
 
     public static final InterfaceVersion IV = InterfaceVersion.VERSION_7; //Implemented Interface Version
     public static final ObjectType       OT = ObjectType.RESOURCE_USAGE;

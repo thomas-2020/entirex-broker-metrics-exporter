@@ -50,6 +50,10 @@ public class BrokerDataCollector {
 	private Gauge nBrokerConversationsSize;
 	private Gauge nBrokerConversationsHigh;
 
+	private Gauge nBrokerTotalStorageAllocated;
+	private Gauge nBrokerTotalStorageLimit;
+	private Gauge nBrokerTotalStorageAllocatedHigh;
+
 	private Gauge nServiceRequests;
 	private Gauge nServiceServer;
 	private Gauge nServiceConvHigh;
@@ -68,19 +72,23 @@ public class BrokerDataCollector {
 			String labelPrefix          = "sag_etb_"; //Prefix for all labels
 			nBrokerStatus               = Gauge.build().name  ( labelPrefix + "node_stats_up"             ).help( "Connection status to Broker"                   ).labelNames( "broker" ).register();
 			nBrokerWorkerActive         = Gauge.build().name  ( labelPrefix + "node_workers_active"       ).help( "Number of active Broker workers"               ).labelNames( "broker" ).register();
-			nBrokerLongBuffersSize      = Gauge.build().name  ( labelPrefix + "node_long_buffers_size"    ).help( "Size of Broker Long Buffers"            ).labelNames( "broker" ).register();
+			nBrokerLongBuffersSize      = Gauge.build().name  ( labelPrefix + "node_long_buffers_size"    ).help( "Size of Broker Long Buffers"                   ).labelNames( "broker" ).register();
 			nBrokerLongBufferActive     = Gauge.build().name  ( labelPrefix + "node_long_buffers_active"  ).help( "Number of active Broker Long Buffers"          ).labelNames( "broker" ).register();
 			nBrokerLongBuffersHigh      = Gauge.build().name  ( labelPrefix + "node_long_buffers_high"    ).help( "Number of highest active Broker Long Buffers"  ).labelNames( "broker" ).register();
-			nBrokerShortBuffersSize     = Gauge.build().name  ( labelPrefix + "node_short_buffers_size"   ).help( "Size of Broker Short Buffers"           ).labelNames( "broker" ).register();
+			nBrokerShortBuffersSize     = Gauge.build().name  ( labelPrefix + "node_short_buffers_size"   ).help( "Size of Broker Short Buffers"                  ).labelNames( "broker" ).register();
 			nBrokerShortBuffersActive   = Gauge.build().name  ( labelPrefix + "node_short_buffers_active" ).help( "Number of active Broker Short Buffers"         ).labelNames( "broker" ).register();
 			nBrokerShortBuffersHigh     = Gauge.build().name  ( labelPrefix + "node_short_buffers_high"   ).help( "Number of highest active Broker Short Buffers" ).labelNames( "broker" ).register();
-			nBrokerServicesSize         = Gauge.build().name  ( labelPrefix + "node_services_size"        ).help( "Size of Broker Services"                ).labelNames( "broker" ).register();
+			nBrokerServicesSize         = Gauge.build().name  ( labelPrefix + "node_services_size"        ).help( "Size of Broker Services"                       ).labelNames( "broker" ).register();
 			nBrokerServicesActive       = Gauge.build().name  ( labelPrefix + "node_services_active"      ).help( "Number of active Broker Services"              ).labelNames( "broker" ).register();
-			nBrokerServersSize          = Gauge.build().name  ( labelPrefix + "node_servers_size"         ).help( "Size of Broker Servers"                 ).labelNames( "broker" ).register();
+			nBrokerServersSize          = Gauge.build().name  ( labelPrefix + "node_servers_size"         ).help( "Size of Broker Servers"                        ).labelNames( "broker" ).register();
 			nBrokerServersActive        = Gauge.build().name  ( labelPrefix + "node_servers_active"       ).help( "Number of active Broker Servers"               ).labelNames( "broker" ).register();
 			nBrokerServersHigh          = Gauge.build().name  ( labelPrefix + "node_servers_high"         ).help( "Number of highest Broker Servers"              ).labelNames( "broker" ).register();
-			nBrokerConversationsSize    = Gauge.build().name  ( labelPrefix + "node_conversations_size"   ).help( "Size of Broker Conversations"           ).labelNames( "broker" ).register();
-			nBrokerConversationsHigh    = Gauge.build().name  ( labelPrefix + "node_conversations_high"   ).help( "Number of highest Broker Conversations"              ).labelNames( "broker" ).register();
+			nBrokerConversationsSize    = Gauge.build().name  ( labelPrefix + "node_conversations_size"   ).help( "Size of Broker Conversations"                  ).labelNames( "broker" ).register();
+			nBrokerConversationsHigh    = Gauge.build().name  ( labelPrefix + "node_conversations_high"   ).help( "Number of highest Broker Conversations"        ).labelNames( "broker" ).register();
+
+			nBrokerTotalStorageAllocated     = Gauge.build().name  ( labelPrefix + "node_total_storage_allocated"      ).help( "Size of allocated storage in bytes"                               ).labelNames( "broker" ).register();
+			nBrokerTotalStorageLimit         = Gauge.build().name  ( labelPrefix + "node_total_storage_limit"          ).help( "Maximum of storage that can be allocated"                         ).labelNames( "broker" ).register();
+			nBrokerTotalStorageAllocatedHigh = Gauge.build().name  ( labelPrefix + "node_total_storage_allocated_high" ).help( "Highest size of allocated storage in bytes since Broker started"  ).labelNames( "broker" ).register();
 
 			if ( isCustomLabelNameValid() ) {
 				nServiceRequests        = Gauge.build().name  ( labelPrefix + "service_requests"  ).help( "Current number of service requests" ) .labelNames( "broker", "service", customLabelName4Services ).register();
@@ -268,6 +276,24 @@ public class BrokerDataCollector {
 			nServiceOccupiedServers.clear();
 			nServiceUOWsActive.clear();
 			nServiceUOWsSize.clear();
+
+			nBrokerWorkerActive.clear();
+			nBrokerLongBuffersSize.clear();
+			nBrokerLongBufferActive.clear();
+			nBrokerLongBuffersHigh.clear();
+			nBrokerShortBuffersSize.clear();
+			nBrokerShortBuffersActive.clear();
+			nBrokerShortBuffersHigh.clear();
+			nBrokerServicesSize.clear();
+			nBrokerServicesActive.clear();
+			nBrokerServersSize.clear();
+			nBrokerServersActive.clear();
+			nBrokerServersHigh.clear();
+			nBrokerConversationsSize.clear();
+			nBrokerConversationsHigh.clear();
+			nBrokerTotalStorageAllocated.clear();
+			nBrokerTotalStorageLimit.clear();
+			nBrokerTotalStorageAllocatedHigh.clear();
 		}
 		catch (Throwable e ) {			
 		}
@@ -290,20 +316,20 @@ public class BrokerDataCollector {
 		for ( int i = 0; i < res.getCommonHeader().getCurrentNumObjects(); i++ ) {
 			BrokerObject bo = (BrokerObject) res.getServiceResponseObject( i );
 			
-			nBrokerWorkerActive.labels       ( brokerID ).set( bo.getNumWorkerAct() );
-			nBrokerLongBuffersSize.labels    ( brokerID ).set( bo.getNumLong() );
-			nBrokerLongBufferActive.labels   ( brokerID ).set( bo.getLongAct() );
-			nBrokerLongBuffersHigh.labels    ( brokerID ).set( bo.getLongHigh() );
-			nBrokerShortBuffersSize.labels   ( brokerID ).set( bo.getNumShort() );
-			nBrokerShortBuffersActive.labels ( brokerID ).set( bo.getShortAct() );
-			nBrokerShortBuffersHigh.labels   ( brokerID ).set( bo.getShortHigh() );
-			nBrokerServicesSize.labels       ( brokerID ).set( bo.getNumService() );
-			nBrokerServicesActive.labels     ( brokerID ).set( bo.getServiceAct() );
-			nBrokerServersSize.labels        ( brokerID ).set( bo.getNumServer() );
-			nBrokerServersActive.labels      ( brokerID ).set( bo.getServerAct() );
-			nBrokerServersHigh.labels        ( brokerID ).set( bo.getServerHigh() );
-			nBrokerConversationsSize.labels  ( brokerID ).set( bo.getNumConv() );
-			nBrokerConversationsHigh.labels  ( brokerID ).set( bo.getConvHigh() );
+			nBrokerWorkerActive.labels       ( broker.getBrokerID() ).set( bo.getNumWorkerAct() );
+			nBrokerLongBuffersSize.labels    ( broker.getBrokerID() ).set( bo.getNumLong() );
+			nBrokerLongBufferActive.labels   ( broker.getBrokerID() ).set( bo.getLongAct() );
+			nBrokerLongBuffersHigh.labels    ( broker.getBrokerID() ).set( bo.getLongHigh() );
+			nBrokerShortBuffersSize.labels   ( broker.getBrokerID() ).set( bo.getNumShort() );
+			nBrokerShortBuffersActive.labels ( broker.getBrokerID() ).set( bo.getShortAct() );
+			nBrokerShortBuffersHigh.labels   ( broker.getBrokerID() ).set( bo.getShortHigh() );
+			nBrokerServicesSize.labels       ( broker.getBrokerID() ).set( bo.getNumService() );
+			nBrokerServicesActive.labels     ( broker.getBrokerID() ).set( bo.getServiceAct() );
+			nBrokerServersSize.labels        ( broker.getBrokerID() ).set( bo.getNumServer() );
+			nBrokerServersActive.labels      ( broker.getBrokerID() ).set( bo.getServerAct() );
+			nBrokerServersHigh.labels        ( broker.getBrokerID() ).set( bo.getServerHigh() );
+			nBrokerConversationsSize.labels  ( broker.getBrokerID() ).set( bo.getNumConv() );
+			nBrokerConversationsHigh.labels  ( broker.getBrokerID() ).set( bo.getConvHigh() );
 		}
 	}
 	
@@ -313,14 +339,16 @@ public class BrokerDataCollector {
 	private void pollMetrics_ResourceUsage( Broker broker ) throws Throwable {
 		InfoServiceMessage info = new InfoServiceMessage();
 		info.setInterfaceVersion( ResourceUsageObject.IV );
-		info.setInterfaceVersion( InterfaceVersion.VERSION_11 ); //for testing
 		info.setBlockLength     ( new BlockLength( 7200 ) );
 		info.setObjectType      ( ResourceUsageObject.OT );
 		ServiceRequest      req = new ServiceRequest( broker, info );
 		IServiceResponse    res = req.sendReceive();
 		for ( int i = 0; i < res.getCommonHeader().getCurrentNumObjects(); i++ ) {
 			ResourceUsageObject bo = (ResourceUsageObject) res.getServiceResponseObject( i );
-			logger.info( bo.toString() );
+
+			nBrokerTotalStorageAllocated.labels      ( broker.getBrokerID() ).set( bo.getTotalStorageAllocated() );
+			nBrokerTotalStorageLimit.labels          ( broker.getBrokerID() ).set( bo.getTotalStorageLimit() );
+			nBrokerTotalStorageAllocatedHigh.labels  ( broker.getBrokerID() ).set( bo.getTotalStorageAllocatedHigh() );
 		}
 	}
 
