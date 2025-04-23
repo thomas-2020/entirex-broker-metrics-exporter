@@ -53,6 +53,12 @@ public class BrokerDataCollector {
 	private Gauge nBrokerTotalStorageAllocated;
 	private Gauge nBrokerTotalStorageLimit;
 	private Gauge nBrokerTotalStorageAllocatedHigh;
+	private Gauge nBrokerCOMBuffersAllocated;
+	private Gauge nBrokerCOMBuffersFree;
+	private Gauge nBrokerCOMBuffersUsed;
+	private Gauge nBrokerConnectionEntriesAllocated;
+	private Gauge nBrokerConnectionEntriesFree;
+	private Gauge nBrokerConnectionEntriesUsed;
 
 	private Gauge nServiceRequests;
 	private Gauge nServiceServer;
@@ -86,9 +92,15 @@ public class BrokerDataCollector {
 			nBrokerConversationsSize    = Gauge.build().name  ( labelPrefix + "node_conversations_size"   ).help( "Size of Broker Conversations"                  ).labelNames( "broker" ).register();
 			nBrokerConversationsHigh    = Gauge.build().name  ( labelPrefix + "node_conversations_high"   ).help( "Number of highest Broker Conversations"        ).labelNames( "broker" ).register();
 
-			nBrokerTotalStorageAllocated     = Gauge.build().name  ( labelPrefix + "node_total_storage_allocated"      ).help( "Size of allocated storage in bytes"                               ).labelNames( "broker" ).register();
-			nBrokerTotalStorageLimit         = Gauge.build().name  ( labelPrefix + "node_total_storage_limit"          ).help( "Maximum of storage that can be allocated"                         ).labelNames( "broker" ).register();
-			nBrokerTotalStorageAllocatedHigh = Gauge.build().name  ( labelPrefix + "node_total_storage_allocated_high" ).help( "Highest size of allocated storage in bytes since Broker started"  ).labelNames( "broker" ).register();
+			nBrokerTotalStorageAllocated      = Gauge.build().name  ( labelPrefix + "node_total_storage_allocated"      ).help( "Size of allocated storage in bytes"                               ).labelNames( "broker" ).register();
+			nBrokerTotalStorageLimit          = Gauge.build().name  ( labelPrefix + "node_total_storage_limit"          ).help( "Maximum of storage that can be allocated"                         ).labelNames( "broker" ).register();
+			nBrokerTotalStorageAllocatedHigh  = Gauge.build().name  ( labelPrefix + "node_total_storage_allocated_high" ).help( "Highest size of allocated storage in bytes since Broker started"  ).labelNames( "broker" ).register();
+			nBrokerCOMBuffersAllocated        = Gauge.build().name  ( labelPrefix + "node_com_buffers_allocated"        ).help( "Number of buffers allocated"                                      ).labelNames( "broker" ).register();
+			nBrokerCOMBuffersFree             = Gauge.build().name  ( labelPrefix + "node_com_buffers_free"             ).help( "Number of buffers free"                                           ).labelNames( "broker" ).register();
+			nBrokerCOMBuffersUsed             = Gauge.build().name  ( labelPrefix + "node_com_buffers_used"             ).help( "Number of buffers used"                                           ).labelNames( "broker" ).register();
+			nBrokerConnectionEntriesAllocated = Gauge.build().name  ( labelPrefix + "node_connection_entries_allocated" ).help( "Number of connection entries allocated"                                      ).labelNames( "broker" ).register();
+			nBrokerConnectionEntriesFree      = Gauge.build().name  ( labelPrefix + "node_connection_entries_free"      ).help( "Number of connection entries free"                                           ).labelNames( "broker" ).register();
+			nBrokerConnectionEntriesUsed      = Gauge.build().name  ( labelPrefix + "node_connection_entries_used"      ).help( "Number of connection entries used"                                           ).labelNames( "broker" ).register();
 
 			if ( isCustomLabelNameValid() ) {
 				nServiceRequests        = Gauge.build().name  ( labelPrefix + "service_requests"  ).help( "Current number of service requests" ) .labelNames( "broker", "service", customLabelName4Services ).register();
@@ -294,6 +306,12 @@ public class BrokerDataCollector {
 			nBrokerTotalStorageAllocated.clear();
 			nBrokerTotalStorageLimit.clear();
 			nBrokerTotalStorageAllocatedHigh.clear();
+			nBrokerCOMBuffersAllocated.clear();
+			nBrokerCOMBuffersFree.clear();
+			nBrokerCOMBuffersUsed.clear();
+			nBrokerConnectionEntriesAllocated.clear();
+			nBrokerConnectionEntriesFree.clear();
+			nBrokerConnectionEntriesUsed.clear();
 		}
 		catch (Throwable e ) {			
 		}
@@ -349,6 +367,12 @@ public class BrokerDataCollector {
 			nBrokerTotalStorageAllocated.labels      ( broker.getBrokerID() ).set( bo.getTotalStorageAllocated() );
 			nBrokerTotalStorageLimit.labels          ( broker.getBrokerID() ).set( bo.getTotalStorageLimit() );
 			nBrokerTotalStorageAllocatedHigh.labels  ( broker.getBrokerID() ).set( bo.getTotalStorageAllocatedHigh() );
+			nBrokerCOMBuffersAllocated.labels        ( broker.getBrokerID() ).set( bo.getCOMBuffersAllocated() );
+			nBrokerCOMBuffersFree.labels             ( broker.getBrokerID() ).set( bo.getCOMBuffersFree() );
+			nBrokerCOMBuffersUsed.labels             ( broker.getBrokerID() ).set( bo.getCOMBuffersUsed() );
+			nBrokerConnectionEntriesAllocated.labels ( broker.getBrokerID() ).set( bo.getConnectionEntriesAllocated() );
+			nBrokerConnectionEntriesFree.labels      ( broker.getBrokerID() ).set( bo.getConnectionEntriesFree() );
+			nBrokerConnectionEntriesUsed.labels      ( broker.getBrokerID() ).set( bo.getConnectionEntriesUsed() );
 		}
 	}
 

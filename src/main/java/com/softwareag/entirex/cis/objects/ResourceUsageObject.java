@@ -30,19 +30,33 @@ public class ResourceUsageObject
     private static final int L_BLACKLIST_ENTRIES_ALLOCATED         = 4; //BLACKLIST: Number of entries allocated.
     private static final int O_BLACKLIST_ENTRIES_ALLOCATED         = O_ACCOUNTING_BUFFERS_USED + L_ACCOUNTING_BUFFERS_USED;
     private static final int L_BLACKLIST_ENTRIES_FREE              = 4; //BLACKLIST: Number of entries free.
+    private static final int O_BLACKLIST_ENTRIES_FREE              = O_BLACKLIST_ENTRIES_ALLOCATED + L_BLACKLIST_ENTRIES_ALLOCATED;
     private static final int L_BLACKLIST_ENTRIES_USED              = 4; //BLACKLIST: Number of entries used.
+    private static final int O_BLACKLIST_ENTRIES_USED              = O_BLACKLIST_ENTRIES_FREE + L_BLACKLIST_ENTRIES_FREE;
     private static final int L_BROKER_TO_BROKER_ENTRIES_ALLOCATED  = 4; //BROKER_TO_BROKER: Number of entries allocated.
+    private static final int O_BROKER_TO_BROKER_ENTRIES_ALLOCATED  = O_BLACKLIST_ENTRIES_USED + L_BLACKLIST_ENTRIES_USED;
     private static final int L_BROKER_TO_BROKER_ENTRIES_FREE       = 4; //BROKER_TO_BROKER: Number of entries free.
+    private static final int O_BROKER_TO_BROKER_ENTRIES_FREE       = O_BROKER_TO_BROKER_ENTRIES_ALLOCATED + L_BROKER_TO_BROKER_ENTRIES_ALLOCATED;
     private static final int L_BROKER_TO_BROKER_ENTRIES_USED       = 4; //BROKER_TO_BROKER: Number of entries used.
+    private static final int O_BROKER_TO_BROKER_ENTRIES_USED       = O_BROKER_TO_BROKER_ENTRIES_FREE + L_BROKER_TO_BROKER_ENTRIES_FREE;
     private static final int L_COM_BUFFERS_ALLOCATED               = 4; //COM_BUFFER: Number of buffers allocated.
+    private static final int C_COM_BUFFERS_ALLOCATED               = O_BROKER_TO_BROKER_ENTRIES_USED + L_BROKER_TO_BROKER_ENTRIES_USED;
     private static final int L_COM_BUFFERS_FREE                    = 4; //COM_BUFFER: Number of buffers free.
+    private static final int O_COM_BUFFERS_FREE                    = C_COM_BUFFERS_ALLOCATED + L_COM_BUFFERS_ALLOCATED;
     private static final int L_COM_BUFFERS_USED                    = 4; //COM_BUFFER: Number of buffers used.
+    private static final int O_COM_BUFFERS_USED                    = O_COM_BUFFERS_FREE + L_COM_BUFFERS_FREE;
     private static final int L_CMDLOG_FILTER_ENTRIES_ALLOCATED     = 4; //CMDLOG_FILTER: Number of entries allocated.
+    private static final int O_CMDLOG_FILTER_ENTRIES_ALLOCATED     = O_COM_BUFFERS_USED + L_COM_BUFFERS_USED;
     private static final int L_CMDLOG_FILTER_ENTRIES_FREE          = 4; //CMDLOG_FILTER: Number of entries free.
+    private static final int O_CMDLOG_FILTER_ENTRIES_FREE          = O_CMDLOG_FILTER_ENTRIES_ALLOCATED + L_CMDLOG_FILTER_ENTRIES_ALLOCATED;
     private static final int L_CMDLOG_FILTER_ENTRIES_USED          = 4; //CMDLOG_FILTER: Number of entries used.
+    private static final int O_CMDLOG_FILTER_ENTRIES_USED          = O_CMDLOG_FILTER_ENTRIES_FREE + L_CMDLOG_FILTER_ENTRIES_FREE;
     private static final int L_CONNECTION_ENTRIES_ALLOCATED        = 4; //CONNECTION: Number of entries allocated.
+    private static final int O_CONNECTION_ENTRIES_ALLOCATED        = O_CMDLOG_FILTER_ENTRIES_USED + L_CMDLOG_FILTER_ENTRIES_USED;
     private static final int L_CONNECTION_ENTRIES_FREE             = 4; //CONNECTION: Number of entries free.
+    private static final int O_CONNECTION_ENTRIES_FREE             = O_CONNECTION_ENTRIES_ALLOCATED + L_CONNECTION_ENTRIES_ALLOCATED;
     private static final int L_CONNECTION_ENTRIES_USED             = 4; //CONNECTION: Number of entries used.
+    private static final int O_CONNECTION_ENTRIES_USED             = O_CONNECTION_ENTRIES_FREE + L_CONNECTION_ENTRIES_FREE;
     private static final int L_CONVERSATION_ENTRIES_ALLOCATED      = 4; //CONVERSATION: Number of entries allocated.
     private static final int L_CONVERSATION_ENTRIES_FREE           = 4; //CONVERSATION: Number of entries free.
     private static final int L_CONVERSATION_ENTRIES_USED           = 4; //CONVERSATION: Number of entries used.
@@ -126,6 +140,35 @@ public class ResourceUsageObject
         return new BigInteger(Utils.getSubArray(abResponse, O_TOTAL_STORAGE_LIMIT + iOff, L_TOTAL_STORAGE_LIMIT)).intValue();
     }
 
+    public int getCOMBuffersAllocated()
+    {
+        return new BigInteger(Utils.getSubArray(abResponse, C_COM_BUFFERS_ALLOCATED + iOff, L_COM_BUFFERS_ALLOCATED)).intValue();
+    }
+
+    public int getCOMBuffersFree()
+    {
+        return new BigInteger(Utils.getSubArray(abResponse, O_COM_BUFFERS_FREE + iOff, L_COM_BUFFERS_FREE)).intValue();
+    }
+
+    public int getCOMBuffersUsed()
+    {
+        return new BigInteger(Utils.getSubArray(abResponse, O_COM_BUFFERS_USED + iOff, L_COM_BUFFERS_USED)).intValue();
+    }
+
+    public int getConnectionEntriesAllocated()
+    {
+        return new BigInteger(Utils.getSubArray(abResponse, O_CONNECTION_ENTRIES_ALLOCATED + iOff, L_CONNECTION_ENTRIES_ALLOCATED)).intValue();
+    }
+
+    public int getConnectionEntriesFree()
+    {
+        return new BigInteger(Utils.getSubArray(abResponse, O_CONNECTION_ENTRIES_FREE + iOff, L_CONNECTION_ENTRIES_FREE)).intValue();
+    }
+
+    public int getConnectionEntriesUsed()
+    {
+        return new BigInteger(Utils.getSubArray(abResponse, O_CONNECTION_ENTRIES_USED + iOff, L_CONNECTION_ENTRIES_USED)).intValue();
+    }
 
     public String toString()
     {
