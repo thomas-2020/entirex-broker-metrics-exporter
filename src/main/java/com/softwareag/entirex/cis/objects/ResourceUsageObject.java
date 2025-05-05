@@ -136,7 +136,7 @@ public class ResourceUsageObject
     private static final int L_UOW_ENTRIES_USED                    = 4; //UOW: Number of entries used.
     private static final int O_UOW_ENTRIES_USED                    = O_UOW_ENTRIES_FREE + L_UOW_ENTRIES_FREE;
     private static final int L_WORK_QUEUE_ENTRIES_ALLOCATED        = 4; //WORK_QUEUE: Number of entries allocated.
-    private static final int O_WORK_QUEUE_ENTRIES_ALLOCATED        = O_UOW_ENTRIES_USED + L_WORK_QUEUE_ENTRIES_ALLOCATED;
+    private static final int O_WORK_QUEUE_ENTRIES_ALLOCATED        = O_UOW_ENTRIES_USED + L_UOW_ENTRIES_USED;
     private static final int L_WORK_QUEUE_ENTRIES_FREE             = 4; //WORK_QUEUE: Number of entries free.
     private static final int O_WORK_QUEUE_ENTRIES_FREE             = O_WORK_QUEUE_ENTRIES_ALLOCATED + L_WORK_QUEUE_ENTRIES_ALLOCATED;
     private static final int L_WORK_QUEUE_ENTRIES_USED             = 4; //WORK_QUEUE: Number of entries used. 
