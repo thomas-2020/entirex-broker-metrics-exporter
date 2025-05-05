@@ -65,6 +65,9 @@ public class BrokerDataCollector {
 	private Gauge nBrokerHeapBytesAllocated;
 	private Gauge nBrokerHeapBytesFree;
 	private Gauge nBrokerHeapBytesUsed;
+	private Gauge nBrokerWorkerStatus;
+	private Gauge nBrokerWorkerCalls;
+	private Gauge nBrokerWorkerIdleTime;
 
 	private Gauge nServiceRequests;
 	private Gauge nServiceServer;
@@ -113,6 +116,9 @@ public class BrokerDataCollector {
 			nBrokerHeapBytesAllocated         = Gauge.build().name  ( labelPrefix + "node_heap_bytes_allocated"         ).help( "Number of Heap bytes allocated"                                   ).labelNames( "broker" ).register();
 			nBrokerHeapBytesFree              = Gauge.build().name  ( labelPrefix + "node_heap_bytes_free"              ).help( "Number of Heap bytes free"                                        ).labelNames( "broker" ).register();
 			nBrokerHeapBytesUsed              = Gauge.build().name  ( labelPrefix + "node_heap_bytes_used"              ).help( "Number of Heap bytes used"                                        ).labelNames( "broker" ).register();
+			nBrokerWorkerStatus               = Gauge.build().name  ( labelPrefix + "node_worker_status"                ).help( "Status of worker"                                                 ).labelNames( "broker", "id" ).register();
+			nBrokerWorkerCalls                = Gauge.build().name  ( labelPrefix + "node_worker_calls"                 ).help( "Sum of calls per worker since Broker started"                     ).labelNames( "broker", "id" ).register();
+			nBrokerWorkerIdleTime             = Gauge.build().name  ( labelPrefix + "node_worker_idle_time"             ).help( "Sum of idle time per worker since Broker started"                 ).labelNames( "broker", "id" ).register();
 
 			if ( isCustomLabelNameValid() ) {
 				nServiceRequests        = Gauge.build().name  ( labelPrefix + "service_requests"  ).help( "Current number of service requests" ) .labelNames( "broker", "service", customLabelName4Services ).register();
@@ -192,7 +198,7 @@ public class BrokerDataCollector {
 			}
 			pollMetrics_Services     ( broker );
 			pollMetrics_Broker       ( broker );
-			//pollMetrics_Worker       ( broker ); //corrently not uses
+			pollMetrics_Worker       ( broker );
 			
 			try {
 				if ( enableResourceUsagePolling )
@@ -330,6 +336,9 @@ public class BrokerDataCollector {
 			nBrokerHeapBytesAllocated.clear();
 			nBrokerHeapBytesFree.clear();
 			nBrokerHeapBytesUsed.clear();
+			nBrokerWorkerStatus.clear();
+			nBrokerWorkerCalls.clear();
+			nBrokerWorkerIdleTime.clear();
 		}
 		catch (Throwable e ) {			
 		}
@@ -412,7 +421,10 @@ public class BrokerDataCollector {
 		IServiceResponse    res = req.sendReceive();
 		for ( int i = 0; i < res.getCommonHeader().getCurrentNumObjects(); i++ ) {
 			WorkerObject bo = (WorkerObject) res.getServiceResponseObject( i );
-			logger.info( bo.toString() );
+			String       id = "" + bo.getWorkerID();
+			nBrokerWorkerStatus.labels  ( broker.getBrokerID(), id ).set( bo.getWorkerStat() );
+			nBrokerWorkerCalls.labels   ( broker.getBrokerID(), id ).set( bo.getCallSum() );
+			nBrokerWorkerIdleTime.labels( broker.getBrokerID(), id ).set( bo.getIdleSum() );
 		}
 	}
 
