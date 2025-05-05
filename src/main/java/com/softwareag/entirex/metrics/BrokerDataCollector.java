@@ -59,6 +59,9 @@ public class BrokerDataCollector {
 	private Gauge nBrokerConnectionEntriesAllocated;
 	private Gauge nBrokerConnectionEntriesFree;
 	private Gauge nBrokerConnectionEntriesUsed;
+	private Gauge nBrokerWorkQueueEntriesAllocated;
+	private Gauge nBrokerWorkQueueEntriesFree;
+	private Gauge nBrokerWorkQueueEntriesUsed;
 
 	private Gauge nServiceRequests;
 	private Gauge nServiceServer;
@@ -98,9 +101,12 @@ public class BrokerDataCollector {
 			nBrokerCOMBuffersAllocated        = Gauge.build().name  ( labelPrefix + "node_com_buffers_allocated"        ).help( "Number of buffers allocated"                                      ).labelNames( "broker" ).register();
 			nBrokerCOMBuffersFree             = Gauge.build().name  ( labelPrefix + "node_com_buffers_free"             ).help( "Number of buffers free"                                           ).labelNames( "broker" ).register();
 			nBrokerCOMBuffersUsed             = Gauge.build().name  ( labelPrefix + "node_com_buffers_used"             ).help( "Number of buffers used"                                           ).labelNames( "broker" ).register();
-			nBrokerConnectionEntriesAllocated = Gauge.build().name  ( labelPrefix + "node_connection_entries_allocated" ).help( "Number of connection entries allocated"                                      ).labelNames( "broker" ).register();
-			nBrokerConnectionEntriesFree      = Gauge.build().name  ( labelPrefix + "node_connection_entries_free"      ).help( "Number of connection entries free"                                           ).labelNames( "broker" ).register();
-			nBrokerConnectionEntriesUsed      = Gauge.build().name  ( labelPrefix + "node_connection_entries_used"      ).help( "Number of connection entries used"                                           ).labelNames( "broker" ).register();
+			nBrokerConnectionEntriesAllocated = Gauge.build().name  ( labelPrefix + "node_connection_entries_allocated" ).help( "Number of connection entries allocated"                           ).labelNames( "broker" ).register();
+			nBrokerConnectionEntriesFree      = Gauge.build().name  ( labelPrefix + "node_connection_entries_free"      ).help( "Number of connection entries free"                                ).labelNames( "broker" ).register();
+			nBrokerConnectionEntriesUsed      = Gauge.build().name  ( labelPrefix + "node_connection_entries_used"      ).help( "Number of connection entries used"                                ).labelNames( "broker" ).register();
+			nBrokerWorkQueueEntriesAllocated  = Gauge.build().name  ( labelPrefix + "node_work_queue_entries_allocated" ).help( "Number of work queue entries allocated"                           ).labelNames( "broker" ).register();
+			nBrokerWorkQueueEntriesFree       = Gauge.build().name  ( labelPrefix + "node_work_queue_entries_free"      ).help( "Number of work queue entries free"                                ).labelNames( "broker" ).register();
+			nBrokerWorkQueueEntriesUsed       = Gauge.build().name  ( labelPrefix + "node_work_queue_entries_used"      ).help( "Number of work queue entries used"                                ).labelNames( "broker" ).register();
 
 			if ( isCustomLabelNameValid() ) {
 				nServiceRequests        = Gauge.build().name  ( labelPrefix + "service_requests"  ).help( "Current number of service requests" ) .labelNames( "broker", "service", customLabelName4Services ).register();
@@ -312,6 +318,9 @@ public class BrokerDataCollector {
 			nBrokerConnectionEntriesAllocated.clear();
 			nBrokerConnectionEntriesFree.clear();
 			nBrokerConnectionEntriesUsed.clear();
+			nBrokerWorkQueueEntriesAllocated.clear();
+			nBrokerWorkQueueEntriesFree.clear();
+			nBrokerWorkQueueEntriesUsed.clear();
 		}
 		catch (Throwable e ) {			
 		}
@@ -373,6 +382,9 @@ public class BrokerDataCollector {
 			nBrokerConnectionEntriesAllocated.labels ( broker.getBrokerID() ).set( bo.getConnectionEntriesAllocated() );
 			nBrokerConnectionEntriesFree.labels      ( broker.getBrokerID() ).set( bo.getConnectionEntriesFree() );
 			nBrokerConnectionEntriesUsed.labels      ( broker.getBrokerID() ).set( bo.getConnectionEntriesUsed() );
+			nBrokerWorkQueueEntriesAllocated.labels  ( broker.getBrokerID() ).set( bo.getWorkQueueEntriesAllocated() );
+			nBrokerWorkQueueEntriesFree.labels       ( broker.getBrokerID() ).set( bo.getWorkQueueEntriesFree() );
+			nBrokerWorkQueueEntriesUsed.labels       ( broker.getBrokerID() ).set( bo.getWorkQueueEntriesUsed() );
 		}
 	}
 

@@ -58,47 +58,89 @@ public class ResourceUsageObject
     private static final int L_CONNECTION_ENTRIES_USED             = 4; //CONNECTION: Number of entries used.
     private static final int O_CONNECTION_ENTRIES_USED             = O_CONNECTION_ENTRIES_FREE + L_CONNECTION_ENTRIES_FREE;
     private static final int L_CONVERSATION_ENTRIES_ALLOCATED      = 4; //CONVERSATION: Number of entries allocated.
+    private static final int O_CONVERSATION_ENTRIES_ALLOCATED      = O_CONNECTION_ENTRIES_USED + L_CONNECTION_ENTRIES_USED;
     private static final int L_CONVERSATION_ENTRIES_FREE           = 4; //CONVERSATION: Number of entries free.
+    private static final int O_CONVERSATION_ENTRIES_FREE           = O_CONVERSATION_ENTRIES_ALLOCATED + L_CONVERSATION_ENTRIES_ALLOCATED;
     private static final int L_CONVERSATION_ENTRIES_USED           = 4; //CONVERSATION: Number of entries used.
+    private static final int O_CONVERSATION_ENTRIES_USED           = O_CONVERSATION_ENTRIES_FREE + L_CONVERSATION_ENTRIES_FREE;
     private static final int L_HEAP_BYTES_ALLOCATED                = 4; //HEAP: Number of bytes allocated.
+    private static final int O_HEAP_BYTES_ALLOCATED                = O_CONVERSATION_ENTRIES_USED + L_CONVERSATION_ENTRIES_USED;
     private static final int L_HEAP_BYTES_FREE                     = 4; //HEAP: Number of bytes free.
+    private static final int O_HEAP_BYTES_FREE                     = O_HEAP_BYTES_ALLOCATED + L_HEAP_BYTES_ALLOCATED;
     private static final int L_HEAP_BYTES_USED                     = 4; //HEAP: Number of bytes used.
+    private static final int O_HEAP_BYTES_USED                     = O_HEAP_BYTES_FREE + L_HEAP_BYTES_FREE;
     private static final int L_MSG_BUFFER_LONG_ALLOCATED           = 4; //MSG_BUFFER_LONG: Number of buffers allocated.
+    private static final int O_MSG_BUFFER_LONG_ALLOCATED           = O_HEAP_BYTES_USED + L_HEAP_BYTES_USED;
     private static final int L_MSG_BUFFER_LONG_FREE                = 4; //MSG_BUFFER_LONG: Number of buffers free.
+    private static final int O_MSG_BUFFER_LONG_FREE                = O_MSG_BUFFER_LONG_ALLOCATED + L_MSG_BUFFER_LONG_ALLOCATED;
     private static final int L_MSG_BUFFER_LONG_USED                = 4; //MSG_BUFFER_LONG: Number of buffers used.
+    private static final int O_MSG_BUFFER_LONG_USED                = O_MSG_BUFFER_LONG_FREE + L_MSG_BUFFER_LONG_FREE;
     private static final int L_MSG_BUFFER_SHORT_ALLOCATED          = 4; //MSG_BUFFER_SHORT: Number of buffers allocated.
+    private static final int O_MSG_BUFFER_SHORT_ALLOCATED          = O_MSG_BUFFER_LONG_USED + L_MSG_BUFFER_LONG_USED;
     private static final int L_MSG_BUFFER_SHORT_FREE               = 4; //MSG_BUFFER_SHORT: Number of buffers free.
+    private static final int O_MSG_BUFFER_SHORT_FREE               = O_MSG_BUFFER_SHORT_ALLOCATED + L_MSG_BUFFER_SHORT_ALLOCATED;
     private static final int L_MSG_BUFFER_SHORT_USED               = 4; //MSG_BUFFER_SHORT: Number of buffers used.
+    private static final int O_MSG_BUFFER_SHORT_USED               = O_MSG_BUFFER_SHORT_FREE + L_MSG_BUFFER_SHORT_FREE;
     private static final int L_PARTICIPANT_ENTRIES_ALLOCATED       = 4; //PARTICIPANT: Number of entries allocated.
+    private static final int O_PARTICIPANT_ENTRIES_ALLOCATED       = O_MSG_BUFFER_SHORT_USED + L_MSG_BUFFER_SHORT_USED;
     private static final int L_PARTICIPANT_ENTRIES_FREE            = 4; //PARTICIPANT: Number of entries free.
+    private static final int O_PARTICIPANT_ENTRIES_FREE            = O_PARTICIPANT_ENTRIES_ALLOCATED + L_PARTICIPANT_ENTRIES_ALLOCATED;
     private static final int L_PARTICIPANT_ENTRIES_USED            = 4; //PARTICIPANT: Number of entries used.
+    private static final int O_PARTICIPANT_ENTRIES_USED            = O_PARTICIPANT_ENTRIES_FREE + L_PARTICIPANT_ENTRIES_FREE;
     private static final int L_PARTICIPANT_EXT_ENTRIES_ALLOCATED   = 4; //PARTICIPANT_EXT: Number of entries allocated.
+    private static final int O_PARTICIPANT_EXT_ENTRIES_ALLOCATED   = O_PARTICIPANT_ENTRIES_USED + L_PARTICIPANT_ENTRIES_USED;
     private static final int L_PARTICIPANT_EXT_ENTRIES_FREE        = 4; //PARTICIPANT_EXT: Number of entries free.
+    private static final int O_PARTICIPANT_EXT_ENTRIES_FREE        = O_PARTICIPANT_EXT_ENTRIES_ALLOCATED + L_PARTICIPANT_EXT_ENTRIES_ALLOCATED;
     private static final int L_PARTICIPANT_EXT_ENTRIES_USED        = 4; //PARTICIPANT_EXT: Number of entries used.
+    private static final int O_PARTICIPANT_EXT_ENTRIES_USED        = O_PARTICIPANT_EXT_ENTRIES_FREE + L_PARTICIPANT_EXT_ENTRIES_FREE;
     private static final int L_PROXY_QUEUE_ENTRIES_ALLOCATED       = 4; //PROXY_QUEUE: Number of entries allocated.
+    private static final int O_PROXY_QUEUE_ENTRIES_ALLOCATED       = O_PARTICIPANT_EXT_ENTRIES_USED + L_PARTICIPANT_EXT_ENTRIES_USED;
     private static final int L_PROXY_QUEUE_ENTRIES_FREE            = 4; //PROXY_QUEUE: Number of entries free.
+    private static final int O_PROXY_QUEUE_ENTRIES_FREE            = O_PROXY_QUEUE_ENTRIES_ALLOCATED + L_PROXY_QUEUE_ENTRIES_ALLOCATED;
     private static final int L_PROXY_QUEUE_ENTRIES_USED            = 4; //PROXY_QUEUE: Number of entries used.
+    private static final int O_PROXY_QUEUE_ENTRIES_USED            = O_PROXY_QUEUE_ENTRIES_FREE + L_PROXY_QUEUE_ENTRIES_FREE;
     private static final int L_SERVICE_ATTRIBUTE_ENTRIES_ALLOCATED = 4; //SERVICE_ATTRIBUTE: Number of entries allocated.
+    private static final int O_SERVICE_ATTRIBUTE_ENTRIES_ALLOCATED = O_PROXY_QUEUE_ENTRIES_USED + L_PROXY_QUEUE_ENTRIES_USED;
     private static final int L_SERVICE_ATTRIBUTE_ENTRIES_FREE      = 4; //SERVICE_ATTRIBUTE: Number of entries free.
+    private static final int O_SERVICE_ATTRIBUTE_ENTRIES_FREE      = O_SERVICE_ATTRIBUTE_ENTRIES_ALLOCATED + L_SERVICE_ATTRIBUTE_ENTRIES_ALLOCATED;
     private static final int L_SERVICE_ATTRIBUTE_ENTRIES_USED      = 4; //SERVICE_ATTRIBUTE: Number of entries used.
+    private static final int O_SERVICE_ATTRIBUTE_ENTRIES_USED      = O_SERVICE_ATTRIBUTE_ENTRIES_FREE + L_SERVICE_ATTRIBUTE_ENTRIES_FREE;
     private static final int L_SERVICE_ENTRIES_ALLOCATED           = 4; //SERVICE: Number of entries allocated.
+    private static final int O_SERVICE_ENTRIES_ALLOCATED           = O_SERVICE_ATTRIBUTE_ENTRIES_USED + L_SERVICE_ATTRIBUTE_ENTRIES_USED;
     private static final int L_SERVICE_ENTRIES_FREE                = 4; //SERVICE: Number of entries free.
+    private static final int O_SERVICE_ENTRIES_FREE                = O_SERVICE_ENTRIES_ALLOCATED + L_SERVICE_ENTRIES_ALLOCATED;
     private static final int L_SERVICE_ENTRIES_USED                = 4; //SERVICE: Number of entries used.
+    private static final int O_SERVICE_ENTRIES_USED                = O_SERVICE_ENTRIES_FREE + L_SERVICE_ENTRIES_FREE;
     private static final int L_SERVICE_EXT_ENTRIES_ALLOCATED       = 4; //SERVICE_EXT: Number of entries allocated.
+    private static final int O_SERVICE_EXT_ENTRIES_ALLOCATED       = O_SERVICE_ENTRIES_USED + L_SERVICE_ENTRIES_USED;
     private static final int L_SERVICE_EXT_ENTRIES_FREE            = 4; //SERVICE_EXT: Number of entries free.
+    private static final int O_SERVICE_EXT_ENTRIES_FREE            = O_SERVICE_EXT_ENTRIES_ALLOCATED + L_SERVICE_EXT_ENTRIES_ALLOCATED;
     private static final int L_SERVICE_EXT_ENTRIES_USED            = 4; //SERVICE_EXT: Number of entries used.
+    private static final int O_SERVICE_EXT_ENTRIES_USED            = O_SERVICE_EXT_ENTRIES_FREE + L_SERVICE_EXT_ENTRIES_FREE;
     private static final int L_TIMEOUT_QUEUE_ENTRIES_ALLOCATED     = 4; //TIMEOUT_QUEUE: Number of entries allocated.
+    private static final int O_TIMEOUT_QUEUE_ENTRIES_ALLOCATED     = L_SERVICE_EXT_ENTRIES_USED + O_SERVICE_EXT_ENTRIES_USED;
     private static final int L_TIMEOUT_QUEUE_ENTRIES_FREE          = 4; //TIMEOUT_QUEUE: Number of entries free.
+    private static final int O_TIMEOUT_QUEUE_ENTRIES_FREE          = O_TIMEOUT_QUEUE_ENTRIES_ALLOCATED + L_TIMEOUT_QUEUE_ENTRIES_ALLOCATED;
     private static final int L_TIMEOUT_QUEUE_ENTRIES_USED          = 4; //TIMEOUT_QUEUE: Number of entries used.
+    private static final int O_TIMEOUT_QUEUE_ENTRIES_USED          = O_TIMEOUT_QUEUE_ENTRIES_FREE + L_TIMEOUT_QUEUE_ENTRIES_FREE;
     private static final int L_TRANSLATION_ENTRIES_ALLOCATED       = 4; //TRANSLATION: Number of entries allocated.
+    private static final int O_TRANSLATION_ENTRIES_ALLOCATED       = O_TIMEOUT_QUEUE_ENTRIES_USED + L_TIMEOUT_QUEUE_ENTRIES_USED;
     private static final int L_TRANSLATION_ENTRIES_FREE            = 4; //TRANSLATION: Number of entries free.
+    private static final int O_TRANSLATION_ENTRIES_FREE            = O_TRANSLATION_ENTRIES_ALLOCATED + L_TRANSLATION_ENTRIES_ALLOCATED;
     private static final int L_TRANSLATION_ENTRIES_USED            = 4; //TRANSLATION: Number of entries used.
+    private static final int O_TRANSLATION_ENTRIES_USED            = O_TRANSLATION_ENTRIES_FREE + L_TRANSLATION_ENTRIES_FREE;
     private static final int L_UOW_ENTRIES_ALLOCATED               = 4; //UOW: Number of entries allocated.
+    private static final int O_UOW_ENTRIES_ALLOCATED               = O_TRANSLATION_ENTRIES_USED + L_TRANSLATION_ENTRIES_USED;
     private static final int L_UOW_ENTRIES_FREE                    = 4; //UOW: Number of entries free.
+    private static final int O_UOW_ENTRIES_FREE                    = O_UOW_ENTRIES_ALLOCATED + L_UOW_ENTRIES_ALLOCATED;
     private static final int L_UOW_ENTRIES_USED                    = 4; //UOW: Number of entries used.
+    private static final int O_UOW_ENTRIES_USED                    = O_UOW_ENTRIES_FREE + L_UOW_ENTRIES_FREE;
     private static final int L_WORK_QUEUE_ENTRIES_ALLOCATED        = 4; //WORK_QUEUE: Number of entries allocated.
+    private static final int O_WORK_QUEUE_ENTRIES_ALLOCATED        = O_UOW_ENTRIES_USED + L_WORK_QUEUE_ENTRIES_ALLOCATED;
     private static final int L_WORK_QUEUE_ENTRIES_FREE             = 4; //WORK_QUEUE: Number of entries free.
+    private static final int O_WORK_QUEUE_ENTRIES_FREE             = O_WORK_QUEUE_ENTRIES_ALLOCATED + L_WORK_QUEUE_ENTRIES_ALLOCATED;
     private static final int L_WORK_QUEUE_ENTRIES_USED             = 4; //WORK_QUEUE: Number of entries used. 
+    private static final int O_WORK_QUEUE_ENTRIES_USED             = O_WORK_QUEUE_ENTRIES_FREE + L_WORK_QUEUE_ENTRIES_FREE; 
 
     private static final int L_OBJECT = 63 * 4;
 
@@ -168,6 +210,21 @@ public class ResourceUsageObject
     public int getConnectionEntriesUsed()
     {
         return new BigInteger(Utils.getSubArray(abResponse, O_CONNECTION_ENTRIES_USED + iOff, L_CONNECTION_ENTRIES_USED)).intValue();
+    }
+
+    public int getWorkQueueEntriesAllocated()
+    {
+        return new BigInteger(Utils.getSubArray(abResponse, O_WORK_QUEUE_ENTRIES_ALLOCATED + iOff, L_WORK_QUEUE_ENTRIES_ALLOCATED)).intValue();
+    }
+
+    public int getWorkQueueEntriesFree()
+    {
+        return new BigInteger(Utils.getSubArray(abResponse, O_WORK_QUEUE_ENTRIES_FREE + iOff, L_WORK_QUEUE_ENTRIES_FREE)).intValue();
+    }
+
+    public int getWorkQueueEntriesUsed()
+    {
+        return new BigInteger(Utils.getSubArray(abResponse, O_WORK_QUEUE_ENTRIES_USED + iOff, L_WORK_QUEUE_ENTRIES_USED)).intValue();
     }
 
     public String toString()
