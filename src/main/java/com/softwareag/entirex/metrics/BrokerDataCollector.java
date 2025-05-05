@@ -62,6 +62,9 @@ public class BrokerDataCollector {
 	private Gauge nBrokerWorkQueueEntriesAllocated;
 	private Gauge nBrokerWorkQueueEntriesFree;
 	private Gauge nBrokerWorkQueueEntriesUsed;
+	private Gauge nBrokerHeapBytesAllocated;
+	private Gauge nBrokerHeapBytesFree;
+	private Gauge nBrokerHeapBytesUsed;
 
 	private Gauge nServiceRequests;
 	private Gauge nServiceServer;
@@ -107,6 +110,9 @@ public class BrokerDataCollector {
 			nBrokerWorkQueueEntriesAllocated  = Gauge.build().name  ( labelPrefix + "node_work_queue_entries_allocated" ).help( "Number of work queue entries allocated"                           ).labelNames( "broker" ).register();
 			nBrokerWorkQueueEntriesFree       = Gauge.build().name  ( labelPrefix + "node_work_queue_entries_free"      ).help( "Number of work queue entries free"                                ).labelNames( "broker" ).register();
 			nBrokerWorkQueueEntriesUsed       = Gauge.build().name  ( labelPrefix + "node_work_queue_entries_used"      ).help( "Number of work queue entries used"                                ).labelNames( "broker" ).register();
+			nBrokerHeapBytesAllocated         = Gauge.build().name  ( labelPrefix + "node_heap_bytes_allocated"         ).help( "Number of Heap bytes allocated"                                   ).labelNames( "broker" ).register();
+			nBrokerHeapBytesFree              = Gauge.build().name  ( labelPrefix + "node_heap_bytes_free"              ).help( "Number of Heap bytes free"                                        ).labelNames( "broker" ).register();
+			nBrokerHeapBytesUsed              = Gauge.build().name  ( labelPrefix + "node_heap_bytes_used"              ).help( "Number of Heap bytes used"                                        ).labelNames( "broker" ).register();
 
 			if ( isCustomLabelNameValid() ) {
 				nServiceRequests        = Gauge.build().name  ( labelPrefix + "service_requests"  ).help( "Current number of service requests" ) .labelNames( "broker", "service", customLabelName4Services ).register();
@@ -321,6 +327,9 @@ public class BrokerDataCollector {
 			nBrokerWorkQueueEntriesAllocated.clear();
 			nBrokerWorkQueueEntriesFree.clear();
 			nBrokerWorkQueueEntriesUsed.clear();
+			nBrokerHeapBytesAllocated.clear();
+			nBrokerHeapBytesFree.clear();
+			nBrokerHeapBytesUsed.clear();
 		}
 		catch (Throwable e ) {			
 		}
@@ -385,6 +394,9 @@ public class BrokerDataCollector {
 			nBrokerWorkQueueEntriesAllocated.labels  ( broker.getBrokerID() ).set( bo.getWorkQueueEntriesAllocated() );
 			nBrokerWorkQueueEntriesFree.labels       ( broker.getBrokerID() ).set( bo.getWorkQueueEntriesFree() );
 			nBrokerWorkQueueEntriesUsed.labels       ( broker.getBrokerID() ).set( bo.getWorkQueueEntriesUsed() );
+			nBrokerHeapBytesAllocated.labels         ( broker.getBrokerID() ).set( bo.getHeapBytesAllocated() );
+			nBrokerHeapBytesFree.labels              ( broker.getBrokerID() ).set( bo.getHeapBytesFree() );
+			nBrokerHeapBytesUsed.labels              ( broker.getBrokerID() ).set( bo.getHeapBytesUsed() );
 		}
 	}
 
