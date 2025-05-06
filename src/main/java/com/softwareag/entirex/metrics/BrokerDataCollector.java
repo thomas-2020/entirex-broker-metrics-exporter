@@ -296,16 +296,7 @@ public class BrokerDataCollector {
 
 	private void clearAllMetrics() {
 		try {
-			nServiceRequests.clear();
-			nServiceServer.clear();
-			nServiceConvHigh.clear();
-			nServiceConvPending.clear();
-			nServiceConvPendingHigh.clear();
-			nServiceConvActive.clear();
-			nServiceWaitsOfServers.clear();
-			nServiceOccupiedServers.clear();
-			nServiceUOWsActive.clear();
-			nServiceUOWsSize.clear();
+			logger.info( "Clear all metrics" );
 
 			nBrokerWorkerActive.clear();
 			nBrokerLongBuffersSize.clear();
@@ -321,6 +312,7 @@ public class BrokerDataCollector {
 			nBrokerServersHigh.clear();
 			nBrokerConversationsSize.clear();
 			nBrokerConversationsHigh.clear();
+
 			nBrokerTotalStorageAllocated.clear();
 			nBrokerTotalStorageLimit.clear();
 			nBrokerTotalStorageAllocatedHigh.clear();
@@ -336,9 +328,21 @@ public class BrokerDataCollector {
 			nBrokerHeapBytesAllocated.clear();
 			nBrokerHeapBytesFree.clear();
 			nBrokerHeapBytesUsed.clear();
+
 			nBrokerWorkerStatus.clear();
 			nBrokerWorkerCalls.clear();
 			nBrokerWorkerIdleTime.clear();
+
+			nServiceRequests.clear();
+			nServiceServer.clear();
+			nServiceConvHigh.clear();
+			nServiceConvPending.clear();
+			nServiceConvPendingHigh.clear();
+			nServiceConvActive.clear();
+			nServiceWaitsOfServers.clear();
+			nServiceOccupiedServers.clear();
+			nServiceUOWsActive.clear();
+			nServiceUOWsSize.clear();
 		}
 		catch (Throwable e ) {			
 		}
