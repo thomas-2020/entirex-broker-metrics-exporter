@@ -14,7 +14,6 @@ import java.math.*;
 public class ResourceUsageObject
     extends AbstractServiceResponseObject
     {
-
     private static final int L_TOTAL_STORAGE_ALLOCATED             = 4; //Size of allocated storage in bytes.
     private static final int O_TOTAL_STORAGE_ALLOCATED             = 0;
     private static final int L_TOTAL_STORAGE_ALLOCATED_HIGH        = 4; //Highest size of allocated storage in bytes since Broker started.
@@ -62,7 +61,7 @@ public class ResourceUsageObject
     private static final int L_CONVERSATION_ENTRIES_FREE           = 4; //CONVERSATION: Number of entries free.
     private static final int O_CONVERSATION_ENTRIES_FREE           = O_CONVERSATION_ENTRIES_ALLOCATED + L_CONVERSATION_ENTRIES_ALLOCATED;
     private static final int L_CONVERSATION_ENTRIES_USED           = 4; //CONVERSATION: Number of entries used.
-    private static final int O_CONVERSATION_ENTRIES_USED           = O_CONVERSATION_ENTRIES_FREE + L_CONVERSATION_ENTRIES_FREE;
+    private static final int O_CONVERSATION_ENTRIES_USED           = O_CONVERSATION_ENTRIES_FREE + L_CONVERSATION_ENTRIES_FREE + 6 * 4; // 6 Reserved fields
     private static final int L_HEAP_BYTES_ALLOCATED                = 4; //HEAP: Number of bytes allocated.
     private static final int O_HEAP_BYTES_ALLOCATED                = O_CONVERSATION_ENTRIES_USED + L_CONVERSATION_ENTRIES_USED;
     private static final int L_HEAP_BYTES_FREE                     = 4; //HEAP: Number of bytes free.
@@ -118,13 +117,13 @@ public class ResourceUsageObject
     private static final int L_SERVICE_EXT_ENTRIES_USED            = 4; //SERVICE_EXT: Number of entries used.
     private static final int O_SERVICE_EXT_ENTRIES_USED            = O_SERVICE_EXT_ENTRIES_FREE + L_SERVICE_EXT_ENTRIES_FREE;
     private static final int L_TIMEOUT_QUEUE_ENTRIES_ALLOCATED     = 4; //TIMEOUT_QUEUE: Number of entries allocated.
-    private static final int O_TIMEOUT_QUEUE_ENTRIES_ALLOCATED     = O_SERVICE_EXT_ENTRIES_USED + L_SERVICE_EXT_ENTRIES_USED;
+    private static final int O_TIMEOUT_QUEUE_ENTRIES_ALLOCATED     = O_SERVICE_EXT_ENTRIES_USED + L_SERVICE_EXT_ENTRIES_USED + 3 * 4; // 3 reserved fields
     private static final int L_TIMEOUT_QUEUE_ENTRIES_FREE          = 4; //TIMEOUT_QUEUE: Number of entries free.
     private static final int O_TIMEOUT_QUEUE_ENTRIES_FREE          = O_TIMEOUT_QUEUE_ENTRIES_ALLOCATED + L_TIMEOUT_QUEUE_ENTRIES_ALLOCATED;
     private static final int L_TIMEOUT_QUEUE_ENTRIES_USED          = 4; //TIMEOUT_QUEUE: Number of entries used.
     private static final int O_TIMEOUT_QUEUE_ENTRIES_USED          = O_TIMEOUT_QUEUE_ENTRIES_FREE + L_TIMEOUT_QUEUE_ENTRIES_FREE;
     private static final int L_TRANSLATION_ENTRIES_ALLOCATED       = 4; //TRANSLATION: Number of entries allocated.
-    private static final int O_TRANSLATION_ENTRIES_ALLOCATED       = O_TIMEOUT_QUEUE_ENTRIES_USED + L_TIMEOUT_QUEUE_ENTRIES_USED;
+    private static final int O_TRANSLATION_ENTRIES_ALLOCATED       = O_TIMEOUT_QUEUE_ENTRIES_USED + L_TIMEOUT_QUEUE_ENTRIES_USED + 9 * 4; // 9 reserved fields
     private static final int L_TRANSLATION_ENTRIES_FREE            = 4; //TRANSLATION: Number of entries free.
     private static final int O_TRANSLATION_ENTRIES_FREE            = O_TRANSLATION_ENTRIES_ALLOCATED + L_TRANSLATION_ENTRIES_ALLOCATED;
     private static final int L_TRANSLATION_ENTRIES_USED            = 4; //TRANSLATION: Number of entries used.
@@ -142,7 +141,7 @@ public class ResourceUsageObject
     private static final int L_WORK_QUEUE_ENTRIES_USED             = 4; //WORK_QUEUE: Number of entries used. 
     private static final int O_WORK_QUEUE_ENTRIES_USED             = O_WORK_QUEUE_ENTRIES_FREE + L_WORK_QUEUE_ENTRIES_FREE; 
 
-    private static final int L_OBJECT = 63 * 4;
+    private static final int L_OBJECT = O_WORK_QUEUE_ENTRIES_USED + L_WORK_QUEUE_ENTRIES_USED;
 
     public static final InterfaceVersion IV = InterfaceVersion.VERSION_7; //Implemented Interface Version
     public static final ObjectType       OT = ObjectType.RESOURCE_USAGE;
