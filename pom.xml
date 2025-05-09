@@ -64,6 +64,11 @@
     	<artifactId>java-util</artifactId>
     	<version>${entirex-dependencies.version}</version>
     </dependency>
+    <dependency>
+      <groupId>com.softwareag.entirex</groupId>
+      <artifactId>java-appmondc</artifactId>
+      <version>${entirex-dependencies.version}</version>
+    </dependency>
   </dependencies>
 	<build>
 		<plugins>
