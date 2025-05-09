@@ -118,6 +118,52 @@ Check the content with ...
 helm search repo entirex
 ```
 
+## Run as Linux Service Daemon
+
+To run the exporter as Linux service daemon, you can configure following script ...
+
+```
+[Unit]
+Description=EntireX Broker Exporter Service
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Restart=always
+ExecStart=<path-to-java>/java -jar <path-to-exporter>/target/entirex-broker-metrics-exporter-0.0.1-SNAPSHOT.jar --spring.config.location=file:///<path-to-exporter>/application.properties
+ExecStop=/bin/kill $MAINPID
+
+[Install]
+WantedBy=default.target
+```
+... which you can use as a template. Copy the template to a file on your Linux host as filename `entirex-broker-metrics-exporter.service` in the folder of your choice (e.g. home of Eporter ZIP file). Replace the place holders in property `ExecStart` ...
+
+* `<path-to-java>` and
+* `<path-to-exporter>`
+
+... by **absolute** paths to Java and the Exporter installation folder. After setting up the property `ExecStart`, please test the command on you command line. The Exporter should start online. Please verify that the property file is loaded.
+
+After testing of `ExecStart`, you can setup the service daemon. We want to configure the service daemon with and as your user (and not as root). To *detach* the service deamon from your user, you can use the system ultility [loginctl](https://www.freedesktop.org/software/systemd/man/latest/loginctl.html#enable-linger%20USER%E2%80%A6) ...
+
+```
+loginctl enable-linger <your-userid>
+```
+
+If you cannot use `loginctl`, you need `sudo` rights. In this case, you must perform all commands with `sudo` and remove the `--user` option ...
+
+```
+# Create and enable service script ...
+systemctl --user enable <path-to-exporter.service-file>/entirex-broker-metrics-exporter.service
+# Reload script into daemon engine ...
+systemctl --user daemon-reload
+# Check status (if script is loaded) ...
+systemctl --user status entirex-broker-metrics-exporter.service
+# Start Exporter ...
+systemctl --user start entirex-broker-metrics-exporter.service
+# Check status (if Exporter is green and running) ...
+systemctl --user status entirex-broker-metrics-exporter.service
+```
+
 ## Actions to Package Helm Chart Repository
 
 ```
