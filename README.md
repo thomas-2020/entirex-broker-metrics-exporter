@@ -1,6 +1,6 @@
 # EntireX Broker Metrics Exporter
 
-Server to provide/export Prometheuse metrics from EntireX Broker.
+Server to provide/export Prometheuse metrics from EntireX Broker. There is also a plan to export Prometheus metrics from EntireX Application Monitoring Data Collector. Please read forward and switch to the Git branch `appmondc` of the project.
 
 ## Introduction
 
