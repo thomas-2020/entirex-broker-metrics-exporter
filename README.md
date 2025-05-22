@@ -1,10 +1,12 @@
-# EntireX Broker Metrics Exporter
+# EntireX Broker and Application Monitoring Data Collector Metrics Exporter
 
-Server to provide/export Prometheuse metrics from EntireX Broker.
+Server to provide/export Prometheuse metrics from EntireX Broker **and** Application Monitoring Data Collector.
 
 ## Introduction
 
-To provide and export Prometheuse metrics from EntireX Broker, a HTTP Server (Tomcat) process is needed. The Java server process connects via ACI to EntireX Broker, retrieves the Broker metrics and provides a REST interface on `/metrics` for Prometheus protocol.
+This exporter is bases on the EntireX Broker Exporter which is provided in the `main` branch and additionly the exporter acts as an Application Monitoring Data Collector with an implemented callback. This callback is used to scrap the metrics and then provides them for Prometheus.
+
+With the build-in HTTP Server the Prometheus metrics for both are available at `/metrics`
 
 ## Prerequisites Installed Libs
 
@@ -13,6 +15,7 @@ Install JARs into Maven repository ...
 ```
 mvn install:install-file -Dfile=libs/exx107/entirex.jar -DgroupId=com.softwareag.entirex -DartifactId=java-client -Dversion=10.7 -Dpackaging=jar -DgeneratePom=true
 mvn install:install-file -Dfile=libs/exx107/exxutil.jar -DgroupId=com.softwareag.entirex -DartifactId=java-util -Dversion=10.7 -Dpackaging=jar -DgeneratePom=true
+mvn install:install-file -Dfile=libs/exx107/appmondc.jar -DgroupId=com.softwareag.entirex -DartifactId=java-appmondc -Dversion=10.7 -Dpackaging=jar -DgeneratePom=true
 ```
 
 ## Build Server
