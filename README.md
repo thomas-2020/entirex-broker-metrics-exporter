@@ -164,6 +164,14 @@ systemctl --user start entirex-broker-metrics-exporter.service
 systemctl --user status entirex-broker-metrics-exporter.service
 ```
 
+## Monitoring of multiple EntireX Brokers
+
+One instance of an exporter can only monitor one EntireX Broker. To monitor more than one Broker on one on-premise host, you must start multiple exporters. To start multiple exporters, you should ...
+
+* create multiple `application.properties` files and set in each the Broker ID.
+* add the `server.port` property in each `application.properties` file and set a unique port value of Tomcat listener.
+* start the exporter with adding the parameter `--spring.config.location=file:///<path-to-exporter>/application<XXX>.properties` to select the appropriated `application.properties` file.
+
 ## Actions to Package Helm Chart Repository
 
 ```
