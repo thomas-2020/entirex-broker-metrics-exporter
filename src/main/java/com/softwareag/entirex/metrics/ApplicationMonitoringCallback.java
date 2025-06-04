@@ -4,15 +4,53 @@ import com.softwareag.entirex.appmondc.DataCollectorCallback;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import io.prometheus.client.Gauge;
+import io.prometheus.client.Counter;
 
 public class ApplicationMonitoringCallback implements DataCollectorCallback {
 
 	private static final Logger logger = LoggerFactory.getLogger( ApplicationMonitoringCallback.class );
 
+	private Gauge rpcTimeResponse;
+	private Gauge rpcTimeClientLayer;
+	private Gauge rpcTimeClientTransport;
+	private Gauge rpcTimeBroker;
+	private Gauge rpcTimeBrokerWaitForServer;
+	private Gauge rpcTimeServerTransport;
+	private Gauge rpcTimeServerLayer;
+	private Gauge rpcTimeServerProgram;
+	private Gauge rpcTimeDBCalls;
+	private Gauge rpcTimeDBTransport;
+	private Counter rpcCallsSuccess;
+	private Counter rpcCallsError;
+	private Counter rpcCalls;
+
     @Override
     public void start( String appmondcDirectory ) {
     	logger.info( "Application Monitoring DC Callback [" + appmondcDirectory + "] is started" );
-	}
+
+		try {
+			String labelPrefix          = "sag_rpc_"; //Prefix for all labels
+			rpcTimeResponse             = Gauge.build().name  ( labelPrefix + "time_response"               ).help( "The complete response time (roundtrip from client to server and back) in microseconds"                                              ).labelNames( "broker", "service", "program" ).register();
+			rpcTimeClientLayer          = Gauge.build().name  ( labelPrefix + "time_client_layer"           ).help( "The time spent in the client RPC layer in microseconds"                                                                             ).labelNames( "broker", "service", "program" ).register();
+			rpcTimeClientTransport      = Gauge.build().name  ( labelPrefix + "time_client_transport"       ).help( "The transport time from the client to the broker and back in microseconds"                                                          ).labelNames( "broker", "service", "program" ).register();
+			rpcTimeBroker               = Gauge.build().name  ( labelPrefix + "time_broker"                 ).help( "The time spent in the broker (active processing) in microseconds"                                                                   ).labelNames( "broker", "service", "program" ).register();
+			rpcTimeBrokerWaitForServer  = Gauge.build().name  ( labelPrefix + "time_broker_wait_for_server" ).help( "The time spent in the broker waiting for an available server in microseconds"                                                       ).labelNames( "broker", "service", "program" ).register();
+			rpcTimeServerTransport      = Gauge.build().name  ( labelPrefix + "time_server_transport"       ).help( "The transport time from the broker to the server and back in microseconds"                                                          ).labelNames( "broker", "service", "program" ).register();
+			rpcTimeServerLayer          = Gauge.build().name  ( labelPrefix + "time_server_layer"           ).help( "The time spent in the server RPC layer (runtime and stub) in microseconds"                                                          ).labelNames( "broker", "service", "program" ).register();
+			rpcTimeServerProgram        = Gauge.build().name  ( labelPrefix + "time_server_program"         ).help( "The time spent in the user program in microseconds"                                                                                 ).labelNames( "broker", "service", "program" ).register();
+			rpcTimeDBCalls              = Gauge.build().name  ( labelPrefix + "time_db_calls"               ).help( "The time spent for database calls  microseconds"                                                                                    ).labelNames( "broker", "service", "program" ).register();
+			rpcTimeDBTransport          = Gauge.build().name  ( labelPrefix + "time_db_transport"           ).help( "The transport time from the Natural user program to the Adabas router and back including the client receiving time in microseconds" ).labelNames( "broker", "service", "program" ).register();
+			
+			rpcCalls                    = Counter.build().name  ( labelPrefix + "calls"           ).help( "Count RPC calls"         ).labelNames( "broker", "service", "program" ).register();
+			rpcCallsSuccess             = Counter.build().name  ( labelPrefix + "success_calls"   ).help( "Count RPC success calls" ).labelNames( "broker", "service", "program" ).register();
+			rpcCallsError               = Counter.build().name  ( labelPrefix + "error_calls"     ).help( "Count RPC error calls"   ).labelNames( "broker", "service", "program" ).register();
+		}
+		catch (Throwable e ) {
+			logger.error( "On ApplicationMonitoringCallback init: ", e );
+		}
+		
+    }
 
     @Override
 	public void stop() {
@@ -21,5 +59,9 @@ public class ApplicationMonitoringCallback implements DataCollectorCallback {
 
 	@Override
 	public void processEvent(Map<String, String> attributes) throws Exception {
+		String scenario = attributes.get( "AppMonScenario");
+		if ( scenario != null && scenario.equals( "RPC" ) ) {
+			
+		}
 	}
 }
