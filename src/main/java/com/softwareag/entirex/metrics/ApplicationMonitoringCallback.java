@@ -112,6 +112,7 @@ public class ApplicationMonitoringCallback implements DataCollectorCallback {
 	private String getLabelService( Map<String, String> attributes ) {
 		String back = attributes.get( "ApplicationName" );
 		if ( back.startsWith( "RPC" ) ) {
+			//Cut of "RPC/service/CALLNAT" the service name
 			int i = back.indexOf( "/" );
 			if ( i > 0 ) {
 				int j = back.indexOf( "/", i + 1 );
