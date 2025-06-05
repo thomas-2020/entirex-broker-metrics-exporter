@@ -8,6 +8,29 @@ This exporter is bases on the EntireX Broker Exporter which is provided in the `
 
 With the build-in HTTP Server the Prometheus metrics for both are available at `/metrics`
 
+## Configure Broker
+
+The Exporter has a build-in Application Monitoring DC. To retrieve the metrics from Broker, you should configure in the Attribute file of Broker the running exporter. In order to do this, modify the Attribute file with enabling `APPLICATION-MONITORING` ...
+
+```
+...
+  DEFAULTS = APPLICATION-MONITORING
+  COLLECTOR-BROKER-ID       = <Exporter-hostname>:57900
+...
+```
+
+The Exporter needs a configuration file [entirex.server.properties](./entirex.server.properties) for the build-in Application Monitoring DC. Here, you can change the listen port `57900` if you want to use another one.
+
+The Broker forwards the metrics to the Application Monitor DC of Exporter if `APPLICATION-MONITORING = YES` is set for `SERVICE`s, e.g. ...
+
+```
+...
+DEFAULTS = SERVICE
+...
+  CLASS = *, SERVER = *, SERVICE = *, DEFERRED = NO, APPLICATION-MONITORING = YES
+...
+```
+
 ## Prerequisites Installed Libs
 
 Install JARs into Maven repository ...
