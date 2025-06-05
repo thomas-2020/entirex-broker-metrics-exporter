@@ -173,7 +173,7 @@ Here are the metrics documented which are available at `/metrics`.
 
 ### Broker
 
-The Broker mtrics are starting with `sag_etb` and have the label `broker`. A service metrics have the label `service`.
+The Broker metrics are starting with `sag_etb` and have the label `broker`. A service metric has additionally the label `service`.
 
 ```
 # HELP sag_etb_node_servers_active Number of active Broker Servers
