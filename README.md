@@ -167,6 +167,140 @@ systemctl --user start entirex-broker-metrics-exporter.service
 systemctl --user status entirex-broker-metrics-exporter.service
 ```
 
+## Metrics
+
+Here are the metrics documented which are available at `/metrics`.
+
+### Broker
+
+The Broker mtrics are starting with `sag_etb` and have the label `broker`. A service metrics have the label `service`.
+
+```
+# HELP sag_etb_node_servers_active Number of active Broker Servers
+# TYPE sag_etb_node_servers_active gauge
+# HELP sag_etb_uows_max Max number of UOWs
+# TYPE sag_etb_uows_max gauge
+# HELP sag_etb_node_total_storage_allocated Size of allocated storage in bytes
+# TYPE sag_etb_node_total_storage_allocated gauge
+# HELP sag_etb_node_conversations_size Size of Broker Conversations
+# TYPE sag_etb_node_conversations_size gauge
+# HELP sag_etb_node_com_buffers_allocated Number of buffers allocated
+# TYPE sag_etb_node_com_buffers_allocated gauge
+# HELP sag_etb_node_stats_up Connection status to Broker
+# TYPE sag_etb_node_stats_up gauge
+# HELP sag_etb_node_long_buffers_high Number of highest active Broker Long Buffers
+# TYPE sag_etb_node_long_buffers_high gauge
+# HELP sag_etb_node_connection_entries_free Number of connection entries free
+# TYPE sag_etb_node_connection_entries_free gauge
+# HELP sag_etb_service_requests Current number of service requests
+# TYPE sag_etb_service_requests gauge
+# HELP sag_etb_conv_pending_high Conversation pending high
+# TYPE sag_etb_conv_pending_high gauge
+# HELP sag_etb_node_long_buffers_size Size of Broker Long Buffers
+# TYPE sag_etb_node_long_buffers_size gauge
+# HELP sag_etb_conv_pending Conversation pending
+# TYPE sag_etb_conv_pending gauge
+# HELP sag_etb_node_total_storage_allocated_high Highest size of allocated storage in bytes since Broker started
+# TYPE sag_etb_node_total_storage_allocated_high gauge
+# TYPE sag_etb_node_workers_active gauge
+# HELP sag_etb_node_services_size Size of Broker Services
+# TYPE sag_etb_node_services_size gauge
+# HELP sag_etb_node_short_buffers_active Number of active Broker Short Buffers
+# TYPE sag_etb_node_short_buffers_active gauge
+# HELP sag_etb_node_servers_size Size of Broker Servers
+# TYPE sag_etb_node_servers_size gauge
+# HELP sag_etb_node_heap_bytes_free Number of Heap bytes free
+# TYPE sag_etb_node_heap_bytes_free gauge
+# HELP sag_etb_node_short_buffers_high Number of highest active Broker Short Buffers
+# TYPE sag_etb_node_short_buffers_high gauge
+# HELP sag_etb_node_connection_entries_used Number of connection entries used
+# TYPE sag_etb_node_connection_entries_used gauge
+# HELP sag_etb_node_short_buffers_size Size of Broker Short Buffers
+# TYPE sag_etb_node_short_buffers_size gauge
+# HELP sag_etb_occupied_servers Number of occupied servers
+# TYPE sag_etb_occupied_servers gauge
+# HELP sag_etb_conv_high Conversation high
+# TYPE sag_etb_conv_high gauge
+# HELP sag_etb_node_heap_bytes_used Number of Heap bytes used
+# TYPE sag_etb_node_heap_bytes_used gauge
+# HELP sag_etb_node_worker_idle_time Sum of idle time per worker since Broker started
+# TYPE sag_etb_node_worker_idle_time gauge
+# HELP sag_etb_node_servers_high Number of highest Broker Servers
+# TYPE sag_etb_node_servers_high gauge
+# HELP sag_etb_uows_active Number of active UOWs
+# TYPE sag_etb_uows_active gauge
+# HELP sag_etb_node_services_active Number of active Broker Services
+# TYPE sag_etb_node_services_active gauge
+# HELP sag_etb_node_heap_bytes_allocated Number of Heap bytes allocated
+# TYPE sag_etb_node_heap_bytes_allocated gauge
+# HELP sag_etb_node_work_queue_entries_allocated Number of work queue entries allocated
+# TYPE sag_etb_node_work_queue_entries_allocated gauge
+# HELP sag_etb_node_long_buffers_active Number of active Broker Long Buffers
+# TYPE sag_etb_node_long_buffers_active gauge
+# HELP sag_etb_conv_active Conversation active
+# TYPE sag_etb_conv_active gauge
+# HELP sag_etb_node_total_storage_limit Maximum of storage that can be allocated
+# TYPE sag_etb_node_total_storage_limit gauge
+# HELP sag_etb_active_servers Current number of servers
+# TYPE sag_etb_active_servers gauge
+# HELP sag_etb_node_worker_calls Sum of calls per worker since Broker started
+# TYPE sag_etb_node_worker_calls gauge
+# HELP sag_etb_node_com_buffers_free Number of buffers free
+# TYPE sag_etb_node_com_buffers_free gauge
+# HELP sag_etb_node_conversations_high Number of highest Broker Conversations
+# TYPE sag_etb_node_conversations_high gauge
+# HELP sag_etb_node_work_queue_entries_free Number of work queue entries free
+# TYPE sag_etb_node_work_queue_entries_free gauge
+# HELP sag_etb_node_com_buffers_used Number of buffers used
+# TYPE sag_etb_node_com_buffers_used gauge
+# HELP sag_etb_node_worker_status Status of worker
+# TYPE sag_etb_node_worker_status gauge
+# HELP sag_etb_waits_of_servers Number of waits of servers
+# TYPE sag_etb_waits_of_servers gauge
+# HELP sag_etb_node_connection_entries_allocated Number of connection entries allocated
+# TYPE sag_etb_node_connection_entries_allocated gauge
+# HELP sag_etb_node_work_queue_entries_used Number of work queue entries used
+# TYPE sag_etb_node_work_queue_entries_used gauge
+```
+
+### RPC from Application Monitoring DC
+
+All RPC metrics are starting with `sag_rpc`. Each metrics has the labels `broker`, `service` and `program`. The *Application Name* is mapped to the label `service`. This is done because in alignment to the Broker metrics.
+
+```
+# HELP sag_rpc_time_broker_wait_for_server The time spent in the broker waiting for an available server in microseconds
+# TYPE sag_rpc_time_broker_wait_for_server gauge
+# HELP sag_rpc_time_server_transport The transport time from the broker to the server and back in microseconds
+# TYPE sag_rpc_time_server_transport gauge
+# HELP sag_rpc_time_client_transport The transport time from the client to the broker and back in microseconds
+# TYPE sag_rpc_time_client_transport gauge
+# HELP sag_rpc_success_calls_total Count RPC success calls
+# TYPE sag_rpc_success_calls_total counter
+# HELP sag_rpc_time_response The complete response time (roundtrip from client to server and back) in microseconds
+# TYPE sag_rpc_time_response gauge
+# HELP sag_rpc_time_client_layer The time spent in the client RPC layer in microseconds
+# TYPE sag_rpc_time_client_layer gauge
+# HELP sag_rpc_time_db_calls The time spent for database calls  microseconds
+# TYPE sag_rpc_time_db_calls gauge
+# HELP sag_rpc_time_broker The time spent in the broker (active processing) in microseconds
+# TYPE sag_rpc_time_broker gauge
+# HELP sag_rpc_time_server_program The time spent in the user program in microseconds
+# TYPE sag_rpc_time_server_program gauge
+# HELP sag_rpc_time_db_transport The transport time from the Natural user program to the Adabas router and back including the client receiving time in microseconds
+# TYPE sag_rpc_time_db_transport gauge
+# HELP sag_rpc_error_calls_total Count RPC error calls
+# TYPE sag_rpc_error_calls_total counter
+# HELP sag_rpc_calls_total Count RPC calls
+# TYPE sag_rpc_calls_total counter
+# HELP sag_rpc_time_server_layer The time spent in the server RPC layer (runtime and stub) in microseconds
+# TYPE sag_rpc_time_server_layer gauge
+# HELP sag_rpc_calls_created Count RPC calls
+# TYPE sag_rpc_calls_created gauge
+# HELP sag_rpc_success_calls_created Count RPC success calls
+# TYPE sag_rpc_success_calls_created gauge
+```
+
+
 ## Actions to Package Helm Chart Repository
 
 ```
