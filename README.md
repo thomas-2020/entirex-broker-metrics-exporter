@@ -104,7 +104,7 @@ java -jar target/entirex-broker-metrics-exporter-0.0.1-SNAPSHOT.jar
 
 ## Build Container
 
-To build a container for EntireX Broker Exporter, you can use the [Dockerfile](./Dockerfile).
+To build a container for EntireX Broker Exporter, you can use the [Dockerfile](./Dockerfile). The container image `maven` is downloaded and used to build the Exporter as image. Maven will download additional libraries. If you behind a HTTP proxy, you must configure Maven regarding proxy settings. There is an example in [Dockerfile](./Dockerfile) to adapt Maven configuration settings.
 
 ```
 docker build -t entirex-broker-exporter:latest .
