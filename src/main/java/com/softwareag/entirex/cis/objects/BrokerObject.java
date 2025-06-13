@@ -1,13 +1,16 @@
 package com.softwareag.entirex.cis.objects;
 
-import com.softwareag.entirex.aci.*;
 import com.softwareag.entirex.cis.*;
 import com.softwareag.entirex.cis.utils.*;
 import com.softwareag.entirex.cis.params.InterfaceVersion;
 import com.softwareag.entirex.cis.params.ObjectType;
 
 import java.math.*;
+import java.util.StringTokenizer;
 
+/*
+ * https://docs.webmethods.io/on-premises/entirex/en/10.7.0/webhelp/aci/cisData.htm#cisData_infoReply_BROKER-OBJECT
+ */
 public class BrokerObject
     extends AbstractServiceResponseObject
 {
@@ -424,4 +427,25 @@ public class BrokerObject
             "   PRODUCT_VERS  : " + getProductVersion() + "\n" +
             "]";
     }
+
+	/**
+	 * Version.Release.Service-Pack.Patch-Level
+	 * "11.1.0.00" ->
+	 *  11010000
+	 *  1.101E9
+	 */
+	public double getProductVersionAsNumber() {
+		String version = getProductVersion();
+		double    back = 0;
+		if ( version == null || version.length() == 0 )
+			return back;
+
+		StringTokenizer st = new StringTokenizer( version, "." );
+		int          loops = 3;
+		while ( st.hasMoreTokens() ) {
+			Integer i = Integer.parseInt( st.nextToken() );
+			back = back + ( Double.valueOf( Math.pow( 100, loops-- ) ) * i.doubleValue() ); 
+		}
+		return back;
+	}
 }
