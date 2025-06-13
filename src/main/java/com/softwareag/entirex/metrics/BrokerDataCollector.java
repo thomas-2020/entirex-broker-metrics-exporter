@@ -68,6 +68,8 @@ public class BrokerDataCollector {
 	private Gauge nBrokerWorkerStatus;
 	private Gauge nBrokerWorkerCalls;
 	private Gauge nBrokerWorkerIdleTime;
+	private Gauge nBrokerTraceLevel;
+	private Gauge nBrokerVersion;
 
 	private Gauge nServiceRequests;
 	private Gauge nServiceServer;
@@ -119,6 +121,8 @@ public class BrokerDataCollector {
 			nBrokerWorkerStatus               = Gauge.build().name  ( labelPrefix + "node_worker_status"                ).help( "Status of worker"                                                 ).labelNames( "broker", "id" ).register();
 			nBrokerWorkerCalls                = Gauge.build().name  ( labelPrefix + "node_worker_calls"                 ).help( "Sum of calls per worker since Broker started"                     ).labelNames( "broker", "id" ).register();
 			nBrokerWorkerIdleTime             = Gauge.build().name  ( labelPrefix + "node_worker_idle_time"             ).help( "Sum of idle time per worker since Broker started"                 ).labelNames( "broker", "id" ).register();
+			nBrokerTraceLevel                 = Gauge.build().name  ( labelPrefix + "node_trace_level"                  ).help( "Actual Trace Level value"                                         ).labelNames( "broker" ).register();
+			nBrokerVersion                    = Gauge.build().name  ( labelPrefix + "node_version"                      ).help( "Version of product, release, service pack and fix level"          ).labelNames( "broker" ).register();
 
 			if ( isCustomLabelNameValid() ) {
 				nServiceRequests        = Gauge.build().name  ( labelPrefix + "service_requests"  ).help( "Current number of service requests" ) .labelNames( "broker", "service", customLabelName4Services ).register();
@@ -332,6 +336,8 @@ public class BrokerDataCollector {
 			nBrokerWorkerStatus.clear();
 			nBrokerWorkerCalls.clear();
 			nBrokerWorkerIdleTime.clear();
+			nBrokerTraceLevel.clear();
+			nBrokerVersion.clear();
 
 			nServiceRequests.clear();
 			nServiceServer.clear();
@@ -364,7 +370,7 @@ public class BrokerDataCollector {
 		IServiceResponse    res = req.sendReceive();
 		for ( int i = 0; i < res.getCommonHeader().getCurrentNumObjects(); i++ ) {
 			BrokerObject bo = (BrokerObject) res.getServiceResponseObject( i );
-			
+
 			nBrokerWorkerActive.labels       ( broker.getBrokerID() ).set( bo.getNumWorkerAct() );
 			nBrokerLongBuffersSize.labels    ( broker.getBrokerID() ).set( bo.getNumLong() );
 			nBrokerLongBufferActive.labels   ( broker.getBrokerID() ).set( bo.getLongAct() );
@@ -379,6 +385,8 @@ public class BrokerDataCollector {
 			nBrokerServersHigh.labels        ( broker.getBrokerID() ).set( bo.getServerHigh() );
 			nBrokerConversationsSize.labels  ( broker.getBrokerID() ).set( bo.getNumConv() );
 			nBrokerConversationsHigh.labels  ( broker.getBrokerID() ).set( bo.getConvHigh() );
+			nBrokerTraceLevel.labels         ( broker.getBrokerID() ).set( bo.getTraceLevel() );
+			nBrokerVersion.labels            ( broker.getBrokerID() ).set( bo.getProductVersionAsNumber() );
 		}
 	}
 	
@@ -431,5 +439,4 @@ public class BrokerDataCollector {
 			nBrokerWorkerIdleTime.labels( broker.getBrokerID(), id ).set( bo.getIdleSum() );
 		}
 	}
-
 }
