@@ -191,6 +191,15 @@ systemctl --user start entirex-broker-metrics-exporter.service
 systemctl --user status entirex-broker-metrics-exporter.service
 ```
 
+### Environment Variable HOSTNAME
+
+It can be that the environment variable `HOSTNAME` is not set in Linux Daemon. You can solve this with changing the daemon script file on `ExecStart` ...
+
+```
+ExecStart=
+/bin/bash -c "hostname=`/bin/hostname` ; <path-to-java>/java -jar entirex-broker-metrics-exporter-0.0.1-SNAPSHOT.jar --spring.config.location=file:///<path-to-exporter>/application.properties"
+```
+
 ## Metrics
 
 Here are the metrics documented which are available at `/metrics`.
