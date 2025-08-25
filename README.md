@@ -14,7 +14,7 @@ The Exporter has a build-in Application Monitoring DC. To retrieve the metrics f
 
 ```
 ...
-  DEFAULTS = APPLICATION-MONITORING
+DEFAULTS = APPLICATION-MONITORING
   COLLECTOR-BROKER-ID       = <Exporter-hostname>:57900
 ...
 ```
@@ -156,7 +156,8 @@ After=network-online.target
 
 [Service]
 Restart=always
-ExecStart=<path-to-java>/java -jar <path-to-exporter>/target/entirex-broker-metrics-exporter-0.0.1-SNAPSHOT.jar --spring.config.location=file:///<path-to-exporter>/application.properties
+WorkingDirectory=<path-to-exporter>
+ExecStart=<path-to-java>/java -jar entirex-broker-metrics-exporter-0.0.1-SNAPSHOT.jar --spring.config.location=file:///<path-to-exporter>/application.properties
 ExecStop=/bin/kill $MAINPID
 
 [Install]
