@@ -209,91 +209,107 @@ Here are the metrics documented which are available at `/metrics`.
 The Broker metrics are starting with `sag_etb` and have the label `broker`. A service metric has additionally the label `service`.
 
 ```
-# HELP sag_etb_node_servers_active Number of active Broker Servers
-# TYPE sag_etb_node_servers_active gauge
-# HELP sag_etb_uows_max Max number of UOWs
-# TYPE sag_etb_uows_max gauge
-# HELP sag_etb_node_total_storage_allocated Size of allocated storage in bytes
-# TYPE sag_etb_node_total_storage_allocated gauge
-# HELP sag_etb_node_conversations_size Size of Broker Conversations
-# TYPE sag_etb_node_conversations_size gauge
-# HELP sag_etb_node_com_buffers_allocated Number of buffers allocated
-# TYPE sag_etb_node_com_buffers_allocated gauge
-# HELP sag_etb_node_stats_up Connection status to Broker
-# TYPE sag_etb_node_stats_up gauge
-# HELP sag_etb_node_long_buffers_high Number of highest active Broker Long Buffers
-# TYPE sag_etb_node_long_buffers_high gauge
-# HELP sag_etb_node_connection_entries_free Number of connection entries free
-# TYPE sag_etb_node_connection_entries_free gauge
-# HELP sag_etb_service_requests Current number of service requests
-# TYPE sag_etb_service_requests gauge
-# HELP sag_etb_conv_pending_high Conversation pending high
-# TYPE sag_etb_conv_pending_high gauge
-# HELP sag_etb_node_long_buffers_size Size of Broker Long Buffers
-# TYPE sag_etb_node_long_buffers_size gauge
-# HELP sag_etb_conv_pending Conversation pending
-# TYPE sag_etb_conv_pending gauge
-# HELP sag_etb_node_total_storage_allocated_high Highest size of allocated storage in bytes since Broker started
-# TYPE sag_etb_node_total_storage_allocated_high gauge
-# TYPE sag_etb_node_workers_active gauge
-# HELP sag_etb_node_services_size Size of Broker Services
-# TYPE sag_etb_node_services_size gauge
-# HELP sag_etb_node_short_buffers_active Number of active Broker Short Buffers
-# TYPE sag_etb_node_short_buffers_active gauge
-# HELP sag_etb_node_servers_size Size of Broker Servers
-# TYPE sag_etb_node_servers_size gauge
-# HELP sag_etb_node_heap_bytes_free Number of Heap bytes free
-# TYPE sag_etb_node_heap_bytes_free gauge
-# HELP sag_etb_node_short_buffers_high Number of highest active Broker Short Buffers
-# TYPE sag_etb_node_short_buffers_high gauge
-# HELP sag_etb_node_connection_entries_used Number of connection entries used
-# TYPE sag_etb_node_connection_entries_used gauge
-# HELP sag_etb_node_short_buffers_size Size of Broker Short Buffers
-# TYPE sag_etb_node_short_buffers_size gauge
-# HELP sag_etb_occupied_servers Number of occupied servers
-# TYPE sag_etb_occupied_servers gauge
-# HELP sag_etb_conv_high Conversation high
-# TYPE sag_etb_conv_high gauge
-# HELP sag_etb_node_heap_bytes_used Number of Heap bytes used
-# TYPE sag_etb_node_heap_bytes_used gauge
 # HELP sag_etb_node_worker_idle_time Sum of idle time per worker since Broker started
 # TYPE sag_etb_node_worker_idle_time gauge
-# HELP sag_etb_node_servers_high Number of highest Broker Servers
-# TYPE sag_etb_node_servers_high gauge
-# HELP sag_etb_uows_active Number of active UOWs
-# TYPE sag_etb_uows_active gauge
-# HELP sag_etb_node_services_active Number of active Broker Services
-# TYPE sag_etb_node_services_active gauge
-# HELP sag_etb_node_heap_bytes_allocated Number of Heap bytes allocated
-# TYPE sag_etb_node_heap_bytes_allocated gauge
-# HELP sag_etb_node_work_queue_entries_allocated Number of work queue entries allocated
-# TYPE sag_etb_node_work_queue_entries_allocated gauge
-# HELP sag_etb_node_long_buffers_active Number of active Broker Long Buffers
-# TYPE sag_etb_node_long_buffers_active gauge
+# HELP sag_etb_node_appmon_enabled Is Application Monitoring enabled
+# TYPE sag_etb_node_appmon_enabled gauge
 # HELP sag_etb_conv_active Conversation active
 # TYPE sag_etb_conv_active gauge
-# HELP sag_etb_node_total_storage_limit Maximum of storage that can be allocated
-# TYPE sag_etb_node_total_storage_limit gauge
-# HELP sag_etb_active_servers Current number of servers
-# TYPE sag_etb_active_servers gauge
-# HELP sag_etb_node_worker_calls Sum of calls per worker since Broker started
-# TYPE sag_etb_node_worker_calls gauge
-# HELP sag_etb_node_com_buffers_free Number of buffers free
-# TYPE sag_etb_node_com_buffers_free gauge
-# HELP sag_etb_node_conversations_high Number of highest Broker Conversations
-# TYPE sag_etb_node_conversations_high gauge
-# HELP sag_etb_node_work_queue_entries_free Number of work queue entries free
-# TYPE sag_etb_node_work_queue_entries_free gauge
-# HELP sag_etb_node_com_buffers_used Number of buffers used
-# TYPE sag_etb_node_com_buffers_used gauge
-# HELP sag_etb_node_worker_status Status of worker
-# TYPE sag_etb_node_worker_status gauge
-# HELP sag_etb_waits_of_servers Number of waits of servers
-# TYPE sag_etb_waits_of_servers gauge
-# HELP sag_etb_node_connection_entries_allocated Number of connection entries allocated
-# TYPE sag_etb_node_connection_entries_allocated gauge
+# HELP sag_etb_node_clients_active Number of active clients
+# TYPE sag_etb_node_clients_active gauge
+# HELP sag_etb_node_connection_entries_free Number of connection entries free
+# TYPE sag_etb_node_connection_entries_free gauge
+# HELP sag_etb_node_servers_active Number of active Broker Servers
+# TYPE sag_etb_node_servers_active gauge
+# HELP sag_etb_node_trace_level Actual Trace Level value
+# TYPE sag_etb_node_trace_level gauge
+# HELP sag_etb_node_services_active Number of active Broker Services
+# TYPE sag_etb_node_services_active gauge
+# HELP sag_etb_node_servers_high Number of highest Broker Servers
+# TYPE sag_etb_node_servers_high gauge
+# HELP sag_etb_node_total_storage_allocated_high Highest size of allocated storage in bytes since Broker started
+# TYPE sag_etb_node_total_storage_allocated_high gauge
 # HELP sag_etb_node_work_queue_entries_used Number of work queue entries used
 # TYPE sag_etb_node_work_queue_entries_used gauge
+# HELP sag_etb_conv_pending_high Conversation pending high
+# TYPE sag_etb_conv_pending_high gauge
+# HELP sag_etb_node_short_buffers_active Number of active Broker Short Buffers
+# TYPE sag_etb_node_short_buffers_active gauge
+# HELP sag_etb_node_work_queue_entries_free Number of work queue entries free
+# TYPE sag_etb_node_work_queue_entries_free gauge
+# HELP sag_etb_node_conversations_size Size of Broker Conversations
+# TYPE sag_etb_node_conversations_size gauge
+# HELP sag_etb_node_worker_calls Sum of calls per worker since Broker started
+# TYPE sag_etb_node_worker_calls gauge
+# HELP sag_etb_node_conversations_high Number of highest Broker Conversations
+# TYPE sag_etb_node_conversations_high gauge
+# HELP sag_etb_node_version Version of product, release, service pack and fix level
+# TYPE sag_etb_node_version gauge
+# HELP sag_etb_node_long_buffers_size Size of Broker Long Buffers
+# TYPE sag_etb_node_long_buffers_size gauge
+# HELP sag_etb_node_worker_status Status of worker
+# TYPE sag_etb_node_worker_status gauge
+# HELP sag_etb_node_connection_entries_used Number of connection entries used
+# TYPE sag_etb_node_connection_entries_used gauge
+# HELP sag_etb_node_com_buffers_used Number of buffers used
+# TYPE sag_etb_node_com_buffers_used gauge
+# HELP sag_etb_node_services_size Size of Broker Services
+# TYPE sag_etb_node_services_size gauge
+# HELP sag_etb_node_connection_entries_allocated Number of connection entries allocated
+# TYPE sag_etb_node_connection_entries_allocated gauge
+# HELP sag_etb_node_heap_bytes_used Number of Heap bytes used
+# TYPE sag_etb_node_heap_bytes_used gauge
+# HELP sag_etb_occupied_servers Number of occupied servers
+# TYPE sag_etb_occupied_servers gauge
+# HELP sag_etb_node_long_buffers_active Number of active Broker Long Buffers
+# TYPE sag_etb_node_long_buffers_active gauge
+# HELP sag_etb_node_com_buffers_allocated Number of buffers allocated
+# TYPE sag_etb_node_com_buffers_allocated gauge
+# HELP sag_etb_node_short_buffers_size Size of Broker Short Buffers
+# TYPE sag_etb_node_short_buffers_size gauge
+# HELP sag_etb_node_short_buffers_high Number of highest active Broker Short Buffers
+# TYPE sag_etb_node_short_buffers_high gauge
+# HELP sag_etb_node_conversations_active Number of active conversations
+# TYPE sag_etb_node_conversations_active gauge
+# HELP sag_etb_waits_of_servers Number of waits of servers
+# TYPE sag_etb_waits_of_servers gauge
+# HELP sag_etb_conv_pending Conversation pending
+# TYPE sag_etb_conv_pending gauge
+# HELP sag_etb_node_heap_bytes_free Number of Heap bytes free
+# TYPE sag_etb_node_heap_bytes_free gauge
+# HELP sag_etb_node_stats_up Connection status to Broker
+# TYPE sag_etb_node_stats_up gauge
+sag_etb_node_stats_up{broker="localhost",} 0.0
+# HELP sag_etb_uows_size Size of UOWs
+# TYPE sag_etb_uows_size gauge
+# HELP sag_etb_active_servers Current number of servers
+# TYPE sag_etb_active_servers gauge
+# HELP sag_etb_node_total_storage_allocated Size of allocated storage in bytes
+# TYPE sag_etb_node_total_storage_allocated gauge
+# HELP sag_etb_uows_active Number of active UOWs
+# TYPE sag_etb_uows_active gauge
+# HELP sag_etb_node_work_queue_entries_allocated Number of work queue entries allocated
+# TYPE sag_etb_node_work_queue_entries_allocated gauge
+# HELP sag_etb_node_servers_size Size of Broker Servers
+# TYPE sag_etb_node_servers_size gauge
+# HELP sag_etb_node_cpu_usage_in_percent CPU time consumed by Broker process in relation to total CPU
+# TYPE sag_etb_node_cpu_usage_in_percent gauge
+# HELP sag_etb_node_com_buffers_free Number of buffers free
+# TYPE sag_etb_node_com_buffers_free gauge
+# HELP sag_etb_node_heap_bytes_allocated Number of Heap bytes allocated
+# TYPE sag_etb_node_heap_bytes_allocated gauge
+# HELP sag_etb_conv_high Conversation high
+# TYPE sag_etb_conv_high gauge
+# HELP sag_etb_node_workers_active Number of active Broker workers
+# TYPE sag_etb_node_workers_active gauge
+# HELP sag_etb_service_requests Current number of service requests
+# TYPE sag_etb_service_requests gauge
+# HELP sag_etb_node_total_storage_limit Maximum of storage that can be allocated
+# TYPE sag_etb_node_total_storage_limit gauge
+# HELP sag_etb_node_long_buffers_high Number of highest active Broker Long Buffers
+# TYPE sag_etb_node_long_buffers_high gauge
+# HELP sag_etb_node_cpu_usage_in_micros Amount of CPU time used by Broker process since start
+# TYPE sag_etb_node_cpu_usage_in_micros gauge
 ```
 
 ### RPC from Application Monitoring DC

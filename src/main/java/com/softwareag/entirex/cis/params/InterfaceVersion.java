@@ -25,6 +25,7 @@ public class InterfaceVersion extends AbstractBinaryRequestParam
 	public static final InterfaceVersion VERSION_6 = new InterfaceVersion( new byte[]{ (byte)0x00, (byte)0x06 } );
 	public static final InterfaceVersion VERSION_7 = new InterfaceVersion( new byte[]{ (byte)0x00, (byte)0x07 } );
 	public static final InterfaceVersion VERSION_11 = new InterfaceVersion( new byte[]{ (byte)0x00, (byte) 11 } );
+	public static final InterfaceVersion VERSION_12 = new InterfaceVersion( new byte[]{ (byte)0x00, (byte) 12 } );
 	
 	private InterfaceVersion(byte[] abSetting)
 		{

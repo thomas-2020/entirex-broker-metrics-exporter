@@ -20,6 +20,7 @@ import com.softwareag.entirex.cis.IServiceResponse;
 import com.softwareag.entirex.cis.InfoServiceMessage;
 import com.softwareag.entirex.cis.ServiceRequest;
 import com.softwareag.entirex.cis.objects.ServiceObject;
+import com.softwareag.entirex.cis.objects.StatisticsObject;
 import com.softwareag.entirex.cis.objects.BrokerObject;
 import com.softwareag.entirex.cis.objects.ResourceUsageObject;
 import com.softwareag.entirex.cis.objects.WorkerObject;
@@ -70,6 +71,11 @@ public class BrokerDataCollector {
 	private Gauge nBrokerWorkerIdleTime;
 	private Gauge nBrokerTraceLevel;
 	private Gauge nBrokerVersion;
+	private Gauge nBrokerIsAppMonEnabled;
+	private Gauge nBrokerCPUUsageInPercent;
+	private Gauge nBrokerCPUUsageInMicros;
+    private Gauge nBrokerClientsActive;
+    private Gauge nBrokerConversationsActive;
 
 	private Gauge nServiceRequests;
 	private Gauge nServiceServer;
@@ -123,6 +129,11 @@ public class BrokerDataCollector {
 			nBrokerWorkerIdleTime             = Gauge.build().name  ( labelPrefix + "node_worker_idle_time"             ).help( "Sum of idle time per worker since Broker started"                 ).labelNames( "broker", "id" ).register();
 			nBrokerTraceLevel                 = Gauge.build().name  ( labelPrefix + "node_trace_level"                  ).help( "Actual Trace Level value"                                         ).labelNames( "broker" ).register();
 			nBrokerVersion                    = Gauge.build().name  ( labelPrefix + "node_version"                      ).help( "Version of product, release, service pack and fix level"          ).labelNames( "broker" ).register();
+			nBrokerIsAppMonEnabled            = Gauge.build().name  ( labelPrefix + "node_appmon_enabled"               ).help( "Is Application Monitoring enabled"                                ).labelNames( "broker" ).register();
+			nBrokerCPUUsageInPercent          = Gauge.build().name  ( labelPrefix + "node_cpu_usage_in_percent"         ).help( "CPU time consumed by Broker process in relation to total CPU"     ).labelNames( "broker" ).register();
+			nBrokerCPUUsageInMicros           = Gauge.build().name  ( labelPrefix + "node_cpu_usage_in_micros"          ).help( "Amount of CPU time used by Broker process since start"            ).labelNames( "broker" ).register();
+			nBrokerClientsActive              = Gauge.build().name  ( labelPrefix + "node_clients_active"               ).help( "Number of active clients"                                         ).labelNames( "broker" ).register();
+			nBrokerConversationsActive        = Gauge.build().name  ( labelPrefix + "node_conversations_active"         ).help( "Number of active conversations"                                   ).labelNames( "broker" ).register();
 
 			if ( isCustomLabelNameValid() ) {
 				nServiceRequests        = Gauge.build().name  ( labelPrefix + "service_requests"  ).help( "Current number of service requests" ) .labelNames( "broker", "service", customLabelName4Services ).register();
@@ -203,6 +214,7 @@ public class BrokerDataCollector {
 			pollMetrics_Services     ( broker );
 			pollMetrics_Broker       ( broker );
 			pollMetrics_Worker       ( broker );
+			pollMetrics_Statistics   ( broker );
 			
 			try {
 				if ( enableResourceUsagePolling )
@@ -338,6 +350,11 @@ public class BrokerDataCollector {
 			nBrokerWorkerIdleTime.clear();
 			nBrokerTraceLevel.clear();
 			nBrokerVersion.clear();
+			nBrokerIsAppMonEnabled.clear();
+			nBrokerCPUUsageInPercent.clear();
+			nBrokerCPUUsageInMicros.clear();
+			nBrokerClientsActive.clear();
+			nBrokerConversationsActive.clear();
 
 			nServiceRequests.clear();
 			nServiceServer.clear();
@@ -387,6 +404,9 @@ public class BrokerDataCollector {
 			nBrokerConversationsHigh.labels  ( broker.getBrokerID() ).set( bo.getConvHigh() );
 			nBrokerTraceLevel.labels         ( broker.getBrokerID() ).set( bo.getTraceLevel() );
 			nBrokerVersion.labels            ( broker.getBrokerID() ).set( bo.getProductVersionAsNumber() );
+			nBrokerIsAppMonEnabled.labels    ( broker.getBrokerID() ).set( bo.isApplicationMonitoringEnabled() );
+			nBrokerCPUUsageInPercent.labels  ( broker.getBrokerID() ).set( bo.getCpuUsageInPercent() );
+			nBrokerCPUUsageInMicros.labels   ( broker.getBrokerID() ).set( bo.getCpuUsageInMicros() );
 		}
 	}
 	
@@ -437,6 +457,23 @@ public class BrokerDataCollector {
 			nBrokerWorkerStatus.labels  ( broker.getBrokerID(), id ).set( bo.getWorkerStat() );
 			nBrokerWorkerCalls.labels   ( broker.getBrokerID(), id ).set( bo.getCallSum() );
 			nBrokerWorkerIdleTime.labels( broker.getBrokerID(), id ).set( bo.getIdleSum() );
+		}
+	}
+
+	/*
+	 * Poll metrics for Statistics
+	 */
+	private void pollMetrics_Statistics( Broker broker ) throws Throwable {
+		InfoServiceMessage info = new InfoServiceMessage();
+		info.setInterfaceVersion( StatisticsObject.IV );
+		info.setBlockLength     ( new BlockLength( 7200 ) );
+		info.setObjectType      ( StatisticsObject.OT );
+		ServiceRequest      req = new ServiceRequest( broker, info );
+		IServiceResponse    res = req.sendReceive();
+		for ( int i = 0; i < res.getCommonHeader().getCurrentNumObjects(); i++ ) {
+			StatisticsObject bo = (StatisticsObject) res.getServiceResponseObject( i );
+			nBrokerClientsActive.labels( broker.getBrokerID() ).set( bo.getClientsActive() );
+			nBrokerConversationsActive.labels( broker.getBrokerID() ).set( bo.getConversationsActive() );
 		}
 	}
 }

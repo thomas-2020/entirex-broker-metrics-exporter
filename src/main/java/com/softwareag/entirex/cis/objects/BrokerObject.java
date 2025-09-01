@@ -158,7 +158,7 @@ public class BrokerObject
     
     //ATTACH-MGRS-ACT 	    I4 	4 	Number of attach servers active.
     private static final int L_ATTACH_MGRS_ACT = 4;
-    private static final int O_ATTACH_MGRS_ACT = O_PSTORE_CONNECTED + L_PSTORE_CONNECTED;
+    private static final int O_ATTACH_MGRS_ACT = O_PSTORE_CONNECTED + L_PSTORE_CONNECTED + 10*4; // 10 * reserved ETB_LONG
     
     //LUWSTAT-ADD-TIME 	    I4 	4 	Unit of work status additional lifetime.
     private static final int L_LUWSTAT_ADD_TIME = 4;
@@ -166,11 +166,201 @@ public class BrokerObject
     
     //PRODUCT-VERSION 	    A16 	4 	Version, release, service pack, and patch level, e.g. 8.0.1.00.
     private static final int L_PRODUCT_VERSION = 16;
-    private static final int O_PRODUCT_VERSION = O_LUWSTAT_ADD_TIME + L_LUWSTAT_ADD_TIME + 10*4;
+    private static final int O_PRODUCT_VERSION = O_LUWSTAT_ADD_TIME + L_LUWSTAT_ADD_TIME;
 
-    private static final int L_BROKER_OBJECT = O_PRODUCT_VERSION + L_PRODUCT_VERSION; // CIS 2: O_CDEFERRED + L_CDEFERRED;
 
-    public static final InterfaceVersion IV = InterfaceVersion.VERSION_4; //Implemented Interface Version
+	//LICENSE-EXPIRATION-DATE 	A10 	5 	License expiration date.
+    private static final int L_LICENSE_EXPIRATION_DATE = 10;
+    private static final int O_LICENSE_EXPIRATION_DATE = O_PRODUCT_VERSION + L_PRODUCT_VERSION;
+	//SECURITY-TYPE 	I1 	5 	Security type:0 	None1 	SAG2 	Light3 	Other
+    private static final int L_SECURITY_TYPE = 1;
+    private static final int O_SECURITY_TYPE = O_LICENSE_EXPIRATION_DATE + L_LICENSE_EXPIRATION_DATE;
+	//ACCOUNTING-ENABLED 	I1 	5 	1 	Accounting enabled0 	Accounting disabled
+    private static final int L_ACCOUNTING_ENABLED = 1;
+    private static final int O_ACCOUNTING_ENABLED = O_SECURITY_TYPE + L_SECURITY_TYPE;
+	//NUM-FREE-CCB 	I4 	5 	Number of free CCB entries (conversation control block).
+    private static final int L_NUM_FREE_CCB = 4;
+    private static final int O_NUM_FREE_CCB = O_ACCOUNTING_ENABLED + L_ACCOUNTING_ENABLED;
+	//NUM-FREE-PCB 	I4 	5 	Number of free PCB entries(participant control block).
+    private static final int L_NUM_FREE_PCB = 4;
+    private static final int O_NUM_FREE_PCB = O_NUM_FREE_CCB + L_NUM_FREE_CCB;
+	//NUM-FREE-PCBEXT 	I4 	5 	Number of free PCBEXT entries (PCB extension).
+    private static final int L_NUM_FREE_PCBEXT = 4;
+    private static final int O_NUM_FREE_PCBEXT = O_NUM_FREE_PCB + L_NUM_FREE_PCB;
+	//NUM-FREE-SCB 	I4 	5 	Number of free SCB entries (service control block).
+    private static final int L_NUM_FREE_SCB = 4;
+    private static final int O_NUM_FREE_SCB = O_NUM_FREE_PCBEXT + L_NUM_FREE_PCBEXT;
+	//NUM-FREE-SCBEXT 	I4 	5 	Number of free SCBEXT entries (SCB extension).
+    private static final int L_NUM_FREE_SCBEXT = 4;
+    private static final int O_NUM_FREE_SCBEXT = O_NUM_FREE_SCB + L_NUM_FREE_SCB;
+	//NUM-FREE-TCBEXT 	I4 	5 	Number of free TCBEXT entries (TCP extension).
+    private static final int L_NUM_FREE_TCBEXT = 4;
+    private static final int O_NUM_FREE_TCBEXT = O_NUM_FREE_SCBEXT + L_NUM_FREE_SCBEXT;
+	//NUM-FREE-TOQ 	I4 	5 	Number of free TOQ entries (timeout queue).
+    private static final int L_NUM_FREE_TOQ = 4;
+    private static final int O_NUM_FREE_TOQ = O_NUM_FREE_TCBEXT + L_NUM_FREE_TCBEXT + 2 * 4; //reserved_etbinfo_v910_66 ... 68
+	//NUM-FREE-UWCB 	I4 	5 	Number of free UWCB entries (UOW control block).
+    private static final int L_NUM_FREE_UWCB = 4;
+    private static final int O_NUM_FREE_UWCB = O_NUM_FREE_TOQ + L_NUM_FREE_TOQ;
+	//NUM-COM-BUFFER 	I4 	5 	Number of communication buffers.
+    private static final int L_NUM_COM_BUFFER = 4;
+    private static final int O_NUM_COM_BUFFER = O_NUM_FREE_UWCB + L_NUM_FREE_UWCB;
+	//NUM-COM-SLOT 	I4 	5 	Number of communication buffer slots.
+    private static final int L_NUM_COM_SLOT = 4;
+    private static final int O_NUM_COM_SLOT = O_NUM_COM_BUFFER + L_NUM_COM_BUFFER;
+	//NUM-COM-SLOT-FREE 	I4 	5 	Number of communication buffer slots free.
+    private static final int L_NUM_COM_SLOT_FREE = 4;
+    private static final int O_NUM_COM_SLOT_FREE = O_NUM_COM_SLOT + L_NUM_COM_SLOT;
+	//NUM-CMDLOG-FILTER 	I4 	5 	Number of CMDLOG filters.
+    private static final int L_NUM_CMDLOG_FILTER = 4;
+    private static final int O_NUM_CMDLOG_FILTER = O_NUM_COM_SLOT_FREE + L_NUM_COM_SLOT_FREE;
+	//NUM-CMDLOG-FILTER-ACTIVE 	I4 	5 	Number of CMDLOG filters active.
+    private static final int L_NUM_CMDLOG_FILTER_ACTIVE = 4;
+    private static final int O_NUM_CMDLOG_FILTER_ACTIVE = O_NUM_CMDLOG_FILTER + L_NUM_CMDLOG_FILTER;
+	//CMDLOG 	I1 	5 	Reflects status of Broker attribute CMDLOG:1 	Command logging features are available for the Broker0 	Command logging not available
+    private static final int L_CMDLOG = 1;
+    private static final int O_CMDLOG = O_NUM_CMDLOG_FILTER_ACTIVE + L_NUM_CMDLOG_FILTER_ACTIVE;
+	//CMDLOG-ENABLED 	I1 	5 	Reflects result of commands DISABLE-CMDLOG and ENABLE-CMDLOG:1 	Command logging enabled0 	Command logging temporarily disabled
+    private static final int L_CMDLOG_ENABLED = 1;
+    private static final int O_CMDLOG_ENABLED = O_CMDLOG + L_CMDLOG;
+	//NOTUSED3 	A2 	5 	Alignment.
+    private static final int L_NOTUSED3 = 2;
+    private static final int O_NOTUSED3 = O_CMDLOG_ENABLED + L_CMDLOG_ENABLED;
+	//ATTRIBUTE-FILE-NAME 	A256 	5 	Attribute file name.
+    private static final int L_ATTRIBUTE_FILE_NAME = 256;
+    private static final int O_ATTRIBUTE_FILE_NAME = O_NOTUSED3 + L_NOTUSED3;
+	//LOG-FILE-NAME 	A256 	5 	Name of trace log file.
+    private static final int L_LOG_FILE_NAME = 256;
+    private static final int O_LOG_FILE_NAME = O_ATTRIBUTE_FILE_NAME + L_ATTRIBUTE_FILE_NAME;
+	//LOG-FILE-SIZE 	I4 	5 	Size of trace log file.
+    private static final int L_LOG_FILE_SIZE = 4;
+    private static final int O_LOG_FILE_SIZE = O_LOG_FILE_NAME + L_LOG_FILE_NAME;
+	//LICENSE-FILE-NAME 	A256 	5 	License file name.
+    private static final int L_LICENSE_FILE_NAME = 256;
+    private static final int O_LICENSE_FILE_NAME = O_LOG_FILE_SIZE + L_LOG_FILE_SIZE;
+	//CMDLOG-FILE-SIZE 	I4 	5 	Max. size of CMDLOG file.
+    private static final int L_CMDLOG_FILE_SIZE = 4;
+    private static final int O_CMDLOG_FILE_SIZE = O_LICENSE_FILE_NAME + L_LICENSE_FILE_NAME;
+	//OPEN-CMDLOG-FILE-NAME 	A256 	5 	Name of open CMDLOG file.
+    private static final int L_OPEN_CMDLOG_FILE_NAME = 256;
+    private static final int O_OPEN_CMDLOG_FILE_NAME = O_CMDLOG_FILE_SIZE + L_CMDLOG_FILE_SIZE;
+	//OPEN-CMDLOG-FILE-SIZE 	I4 	5 	Size of CMDLOG file.
+    private static final int L_OPEN_CMDLOG_FILE_SIZE = 4;
+    private static final int O_OPEN_CMDLOG_FILE_SIZE = O_OPEN_CMDLOG_FILE_NAME + L_OPEN_CMDLOG_FILE_NAME;
+	//CLOSED-CMDLOG-FILE-NAME 	A256 	5 	Name of closed CMDLOG file.
+    private static final int L_CLOSED_CMDLOG_FILE_NAME = 256;
+    private static final int O_CLOSED_CMDLOG_FILE_NAME = O_OPEN_CMDLOG_FILE_SIZE + L_OPEN_CMDLOG_FILE_SIZE;
+	//CLOSED-CMDLOG-FILE-SIZE 	I4 	5 	Size of closed CMDLOG file.
+    private static final int L_CLOSED_CMDLOG_FILE_SIZE = 4;
+    private static final int O_CLOSED_CMDLOG_FILE_SIZE = O_CLOSED_CMDLOG_FILE_NAME + L_CLOSED_CMDLOG_FILE_NAME;
+	//RESERVED 	I4 	5 	Reserved for future use.
+    private static final int L_RESERVED = 4;
+    private static final int O_RESERVED = O_CLOSED_CMDLOG_FILE_SIZE + L_CLOSED_CMDLOG_FILE_SIZE;
+	//ACCOUNTING-FILE-NAME 	A256 	5 	Name of accounting output file.
+    private static final int L_ACCOUNTING_FILE_NAME = 256;
+    private static final int O_ACCOUNTING_FILE_NAME = O_RESERVED + L_RESERVED;
+	//ACCOUNTING-FILE-SIZE 	I4 	5 	Size of accounting output file.
+    private static final int L_ACCOUNTING_FILE_SIZE = 4;
+    private static final int O_ACCOUNTING_FILE_SIZE = O_ACCOUNTING_FILE_NAME + L_ACCOUNTING_FILE_NAME;
+	//CONTROL-INTERVAL 	I4 	5 	Control interval in seconds.
+    private static final int L_CONTROL_INTERVAL = 4;
+    private static final int O_CONTROL_INTERVAL = O_ACCOUNTING_FILE_SIZE + L_ACCOUNTING_FILE_SIZE;
+	//MAX-TAKEOVER-ATTEMPTS 	I4 	5 	Max. number of takeover attempts.
+    private static final int L_MAX_TAKEOVER_ATTEMPTS = 4;
+    private static final int O_MAX_TAKEOVER_ATTEMPTS = O_CONTROL_INTERVAL + L_CONTROL_INTERVAL;
+	//RUN-MODE 	A16 	5 	Broker run mode.
+    private static final int L_RUN_MODE = 16;
+    private static final int O_RUN_MODE = O_MAX_TAKEOVER_ATTEMPTS + L_MAX_TAKEOVER_ATTEMPTS;
+	//PARTNER-CLUSTER-ADDRESS 	A32 	5 	Partner Cluster Address.
+    private static final int L_PARTNER_CLUSTER_ADDRES = 32;
+    private static final int O_PARTNER_CLUSTER_ADDRES = O_RUN_MODE + L_RUN_MODE;
+	//CMDLOG-SWITCHES-BY-SIZE 	I4 	5 	Number of CMDLOG switches by size.
+    private static final int L_CMDLOG_SWITCHES_BY_SIZE = 4;
+    private static final int O_CMDLOG_SWITCHES_BY_SIZE = O_PARTNER_CLUSTER_ADDRES + L_PARTNER_CLUSTER_ADDRES;
+	//CMDLOG-SWITCHES-BY-CIS 	I4 	5 	Number of CMDLOG switches by CIS.
+    private static final int L_CMDLOG_SWITCHES_BY_CIS = 4;
+    private static final int O_CMDLOG_SWITCHES_BY_CIS = O_CMDLOG_SWITCHES_BY_SIZE + L_CMDLOG_SWITCHES_BY_SIZE;
+	//CLIENT-NONACT 	I4 	7 	Client timeout in seconds. See broker attribute CLIENT-NONACT.
+    private static final int L_CLIENT_NONAC = 4;
+    private static final int O_CLIENT_NONAC = O_CMDLOG_SWITCHES_BY_CIS + L_CMDLOG_SWITCHES_BY_CIS;
+	//NUM-WQE 	I4 	7 	Number of work queue entries. See broker attribute NUM-WQE.
+    private static final int L_NUM_WQE = 4;
+    private static final int O_NUM_WQE = O_CLIENT_NONAC + L_CLIENT_NONAC;
+	//TOTAL-STORAGE-ALLOCATED 	I4 	7 	Size of allocated storage in bytes.
+    private static final int L_TOTAL_STORAGE_ALLOCATED = 4;
+    private static final int O_TOTAL_STORAGE_ALLOCATED = O_NUM_WQE + L_NUM_WQE;
+	//TOTAL-STORAGE-ALLOCATED-HIGH 	I4 	7 	Highest size of allocated storage in bytes since Broker started.
+    private static final int L_TOTAL_STORAGE_ALLOCATED_HIGH = 4;
+    private static final int O_TOTAL_STORAGE_ALLOCATED_HIGH = O_TOTAL_STORAGE_ALLOCATED + L_TOTAL_STORAGE_ALLOCATED;
+	//TOTAL-STORAGE-LIMIT 	I4 	7 	Maximum of storage that can be allocated. See broker attribute MAX-MEMORY.
+    private static final int L_TOTAL_STORAGE_LIMIT = 4;
+    private static final int O_TOTAL_STORAGE_LIMIT = O_TOTAL_STORAGE_ALLOCATED_HIGH + L_TOTAL_STORAGE_ALLOCATED_HIGH;
+	//BROKER-ID 	A32 	7 	BROKER-ID. See broker attribute BROKER-ID.
+    private static final int L_BROKER_ID = 32;
+    private static final int O_BROKER_ID = O_TOTAL_STORAGE_LIMIT + L_TOTAL_STORAGE_LIMIT;
+	//HOST-NAME 	A256 	7 	Name of host running broker (on z/OS copied from CVTSNAME).
+    private static final int L_HOST_NAME = 256;
+    private static final int O_HOST_NAME = O_BROKER_ID + L_BROKER_ID;
+	//SYSPLEX-NAME 	A8 	7 	Name of SYSPLEX (copied from ECVTSPLX).
+    private static final int L_SYSPLEX_NAME = 8;
+    private static final int O_SYSPLEX_NAME = O_HOST_NAME + L_HOST_NAME;
+	//CAUTOLOGON 	I1 	7 	Auto logon:0 	NO1 	YESSee broker attribute AUTOLOGON.
+    private static final int L_CAUTOLOGON = 1;
+    private static final int O_CAUTOLOGON = O_SYSPLEX_NAME + L_SYSPLEX_NAME;
+	//CDYNAMIC-MEMORY-MANAGEMENT 	I1 	7 	Dynamic memory management:0 	NO1 	YESSee broker attribute DYNAMIC-MEMORY-MANAGEMENT.
+    private static final int L_CDYNAMIC_MEMORY_MANAGEMENT = 1;
+    private static final int O_CDYNAMIC_MEMORY_MANAGEMENT = O_CAUTOLOGON + L_CAUTOLOGON;
+	//CDYNAMIC-WORKER-MANAGEMENT 	I1 	7 	Dynamic worker management:0 	NO1 	YESSee broker attribute DYNAMIC-WORKER-MANAGEMENT.
+    private static final int L_CDYNAMIC_WORKER_MANAGEMENT = 1;
+    private static final int O_CDYNAMIC_WORKER_MANAGEMENT = O_CDYNAMIC_MEMORY_MANAGEMENT + L_CDYNAMIC_MEMORY_MANAGEMENT;
+	//CSERVICE-UPDATES 	I1 	7 	Service updates:0 	NO1 	YESSee broker attribute SERVICE-UPDATES.
+    private static final int L_CSERVICE_UPDATES = 1;
+    private static final int O_CSERVICE_UPDATES = O_CDYNAMIC_WORKER_MANAGEMENT + L_CDYNAMIC_WORKER_MANAGEMENT;
+    //ETB_CHAR reserved_etbinfo_v910_36
+    private static final int L_RESERVED_ETBINFO = 1;
+    private static final int O_RESERVED_ETBINFO = O_CSERVICE_UPDATES + L_CSERVICE_UPDATES;
+    //CTRANSPORT-NET 	I1 	7 	Was TRANSPORT=NET specified?0 	NO1 	YESSee broker attribute TRANSPORT=NET.
+    private static final int L_CTRANSPORT_NET = 1;
+    private static final int O_CTRANSPORT_NET = O_RESERVED_ETBINFO + L_RESERVED_ETBINFO;
+	//CTRANSPORT-SSL 	I1 	7 	Was TRANSPORT=SSL specified?0 	NO1 	YESSee broker attribute TRANSPORT=SSL.
+    private static final int L_CTRANSPORT_SSL = 1;
+    private static final int O_CTRANSPORT_SSL = O_CTRANSPORT_NET + L_CTRANSPORT_NET;
+	//CTRANSPORT-TCP 	I1 	7 	Was TRANSPORT=TCP specified?0 	NO1 	YESSee broker attribute TRANSPORT=TCP.
+    private static final int L_CTRANSPORT_TCP = 1;
+    private static final int O_CTRANSPORT_TCP = O_CTRANSPORT_SSL + L_CTRANSPORT_SSL;
+	//NTRAP-ERROR 	I4 	7 	Value defined for attribute TRAP-ERROR.
+    private static final int L_NTRAP_ERROR = 4;
+    private static final int O_NTRAP_ERROR = O_CTRANSPORT_TCP + L_CTRANSPORT_TCP;
+	//CPU-USED-IN-SECONDS 	I4 	9 	Amount of CPU time in seconds used by Broker process since Broker start.
+    private static final int L_CPU_USED_IN_SECONDS = 4;
+    private static final int O_CPU_USED_IN_SECONDS = O_NTRAP_ERROR + L_NTRAP_ERROR;
+	//CPU-USED-REST-IN-MICROSECONDS 	I4 	9 	Additional CPU time in microseconds used by Broker process since Broker start. (CPU time is provided by two fields because total value including microseconds may exceed one 4-byte integer.)
+    private static final int L_CPU_USED_REST_IN_MICROSECONDS = 4;
+    private static final int O_CPU_USED_REST_IN_MICROSECONDS = O_CPU_USED_IN_SECONDS + L_CPU_USED_IN_SECONDS;
+	//CPU-USED-PERCENTAGE 	I4 	9 	CPU time consumed by Broker process in relation to total CPU workload in percent and normalized by the number of CPUs. It never exceeds 100%.
+    private static final int L_CPU_USED_PERCENTAGE = 4;
+    private static final int O_CPU_USED_PERCENTAGE = O_CPU_USED_REST_IN_MICROSECONDS + L_CPU_USED_REST_IN_MICROSECONDS;
+	//APPLICATION-MONITORING 	I1 	11 	Application Monitoring.0 	NO1 	YESSee broker attribute APPLICATION-MONITORING.
+    private static final int L_APPLICATION_MONITORING = 1;
+    private static final int O_APPLICATION_MONITORING = O_CPU_USED_PERCENTAGE + L_CPU_USED_PERCENTAGE;
+	//COLLECTOR-BROKER-ID 	A64 	11 	Collector Broker ID. See Application Monitoring attribute COLLECTOR-BROKER-ID.
+    private static final int L_COLLECTOR_BROKER_ID = 64;
+    private static final int O_COLLECTOR_BROKER_ID = O_APPLICATION_MONITORING + L_APPLICATION_MONITORING;
+	//UNUSED3 	A3 	11 	Alignment.
+    private static final int L_UNUSED3 = 3;
+    private static final int O_UNUSED3 = O_COLLECTOR_BROKER_ID + L_COLLECTOR_BROKER_ID;
+	//PROCESS-ID 	A16 	12 	Process ID of Broker. Under z/OS, the JOB-ID is returned.
+    private static final int L_PROCESS_ID = 16;
+    private static final int O_PROCESS_ID = O_UNUSED3 + L_UNUSED3;
+	//THREAD-ID 	A16 	12 	Thread ID of Broker. Under z/OS, the TCB address of the main task is returned.
+    private static final int L_THREAD_ID = 16;
+    private static final int O_THREAD_ID = O_PROCESS_ID + L_PROCESS_ID;
+
+    //private static final int L_BROKER_OBJECT = O_PRODUCT_VERSION + L_PRODUCT_VERSION; // CIS 2: O_CDEFERRED + L_CDEFERRED;
+    private static final int L_BROKER_OBJECT = O_THREAD_ID + L_THREAD_ID;
+
+    //public static final InterfaceVersion IV = InterfaceVersion.VERSION_4; //Implemented Interface Version
+    public static final InterfaceVersion IV = InterfaceVersion.VERSION_12; //Implemented Interface Version
     public static final ObjectType       OT = ObjectType.BROKER;
     
     public BrokerObject()
@@ -425,6 +615,17 @@ public class BrokerObject
             "   API_VERSION   : " + getHighestAPIVersion() + "\n" +
             "   CIS_VERSION   : " + getHighestCISVersion() + "\n" +
             "   PRODUCT_VERS  : " + getProductVersion() + "\n" +
+            "   APPMON_ENABLED: " + isApplicationMonitoringEnabled() + "\n" +
+            "   CPU_USAGE_%   : " + getCpuUsageInPercent() + "\n" + 
+            "   CPU_USAGE     : " + getCpuUsageInMicros() + "\n" +
+            "   NUM_WQE       : " + getNumWQE() + "\n" +
+            "   ATTRIBUTE_FILE: " + getAttributeFilename() + "\n" +
+            "   HOSTNAME      : " + getHostname() + "\n" +
+            "   TRAP_ERRORS   : " + getTrapErrors() + "\n" +
+            "   AUTOLOGON_ENAB: " + isAutoLogonEnabled() + "\n" +
+            "   SYSPLEX_NAME  : " + getSysplexName() + "\n" +
+            "   BROKER_ID     : " + getBrokerID() + "\n" +
+            "   LICENSE_FILE  : " + getLicenseFilename() + "\n" + 
             "]";
     }
 
@@ -447,5 +648,57 @@ public class BrokerObject
 			back = back + ( Double.valueOf( Math.pow( 100, loops-- ) ) * i.doubleValue() ); 
 		}
 		return back;
+	}
+
+	public int isApplicationMonitoringEnabled() {
+		return new BigInteger(Utils.getSubArray(abResponse, O_APPLICATION_MONITORING + iOff, L_APPLICATION_MONITORING)).intValue();
+	}
+	
+	public int getCpuUsageInPercent() {
+		return new BigInteger(Utils.getSubArray(abResponse, O_CPU_USED_PERCENTAGE + iOff, L_CPU_USED_PERCENTAGE)).intValue();
+	}
+
+	private long getCpuUsageInSeconds() {
+		return new BigInteger(Utils.getSubArray(abResponse, O_CPU_USED_IN_SECONDS + iOff, L_CPU_USED_IN_SECONDS)).intValue();		
+	}
+
+	private long getCpuUsageRestInMicros() {
+		return new BigInteger(Utils.getSubArray(abResponse, O_CPU_USED_REST_IN_MICROSECONDS + iOff, L_CPU_USED_REST_IN_MICROSECONDS)).intValue();		
+	}
+
+	public double getCpuUsageInMicros() {
+		return ( getCpuUsageInSeconds() * 1000000 ) + getCpuUsageRestInMicros();
+	}
+
+	public int getNumWQE() {
+		return new BigInteger(Utils.getSubArray(abResponse, O_NUM_WQE + iOff, L_NUM_WQE)).intValue();
+	}
+
+	public String getAttributeFilename() {
+		return new String( Utils.getSubArray(abResponse, O_ATTRIBUTE_FILE_NAME + iOff, L_ATTRIBUTE_FILE_NAME) ).trim();
+	}
+
+	public String getHostname() {
+		return new String( Utils.getSubArray(abResponse, O_HOST_NAME + iOff, L_HOST_NAME) ).trim();
+	}
+
+	public int getTrapErrors() {
+		return new BigInteger(Utils.getSubArray(abResponse, O_NTRAP_ERROR + iOff, L_NTRAP_ERROR)).intValue();		
+	}
+
+	public int isAutoLogonEnabled() {
+		return new BigInteger(Utils.getSubArray(abResponse, O_CAUTOLOGON + iOff, L_CAUTOLOGON)).intValue();
+	}
+
+	public String getSysplexName() {
+		return new String( Utils.getSubArray(abResponse, O_SYSPLEX_NAME + iOff, L_SYSPLEX_NAME) ).trim();
+	}
+
+	public String getBrokerID() {
+		return new String( Utils.getSubArray(abResponse, O_BROKER_ID + iOff, L_BROKER_ID) ).trim();
+	}
+
+	public String getLicenseFilename() {
+		return new String( Utils.getSubArray(abResponse, O_LICENSE_FILE_NAME + iOff, L_LICENSE_FILE_NAME) ).trim();
 	}
 }
