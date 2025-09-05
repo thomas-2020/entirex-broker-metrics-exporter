@@ -190,6 +190,17 @@ public class ServiceRequest
         return new CmdServiceResponse(bmResponse.getMessage());
     }
 
+    /**
+     * Close conversation in Broker
+     */
+    public void closeConversation() {
+    	try {
+    		if ( oInfoConversation != null )
+    			oInfoConversation.end();
+		} catch ( BrokerException e ) {
+			//suppress any exception
+		}
+    }
 
     /**
      * Used for internet tests only.
