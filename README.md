@@ -197,7 +197,7 @@ It can be that the environment variable `HOSTNAME` is not set in Linux Daemon. Y
 
 ```
 ExecStart=
-/bin/bash -c "hostname=`/bin/hostname` ; <path-to-java>/java -jar entirex-broker-metrics-exporter-0.0.1-SNAPSHOT.jar --spring.config.location=file:///<path-to-exporter>/application.properties"
+/bin/bash -c "HOSTNAME=`/bin/hostname` ; <path-to-java>/java -jar entirex-broker-metrics-exporter-0.0.1-SNAPSHOT.jar --spring.config.location=file:///<path-to-exporter>/application.properties"
 ```
 
 ## Metrics
