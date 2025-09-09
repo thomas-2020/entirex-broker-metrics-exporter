@@ -25,9 +25,6 @@ import com.softwareag.entirex.cis.objects.BrokerObject;
 import com.softwareag.entirex.cis.objects.ResourceUsageObject;
 import com.softwareag.entirex.cis.objects.WorkerObject;
 import com.softwareag.entirex.cis.params.BlockLength;
-import com.softwareag.entirex.cis.params.InterfaceVersion;
-import com.softwareag.entirex.cis.params.ObjectType;
-import com.softwareag.entirex.cis.params.ConvID;
 
 @Service
 @EnableScheduling
@@ -278,6 +275,7 @@ public class BrokerDataCollector {
 				}
 			}
 		}
+		req.closeConversation();
 	}
 
 	private String printServiceName( ServiceObject so ) {
@@ -408,6 +406,7 @@ public class BrokerDataCollector {
 			nBrokerCPUUsageInPercent.labels  ( broker.getBrokerID() ).set( bo.getCpuUsageInPercent() );
 			nBrokerCPUUsageInMicros.labels   ( broker.getBrokerID() ).set( bo.getCpuUsageInMicros() );
 		}
+		req.closeConversation();
 	}
 	
 	/*
@@ -439,6 +438,7 @@ public class BrokerDataCollector {
 			nBrokerHeapBytesFree.labels              ( broker.getBrokerID() ).set( bo.getHeapBytesFree() );
 			nBrokerHeapBytesUsed.labels              ( broker.getBrokerID() ).set( bo.getHeapBytesUsed() );
 		}
+		req.closeConversation();
 	}
 
 	/*
@@ -458,6 +458,7 @@ public class BrokerDataCollector {
 			nBrokerWorkerCalls.labels   ( broker.getBrokerID(), id ).set( bo.getCallSum() );
 			nBrokerWorkerIdleTime.labels( broker.getBrokerID(), id ).set( bo.getIdleSum() );
 		}
+		req.closeConversation();
 	}
 
 	/*
@@ -475,5 +476,6 @@ public class BrokerDataCollector {
 			nBrokerClientsActive.labels( broker.getBrokerID() ).set( bo.getClientsActive() );
 			nBrokerConversationsActive.labels( broker.getBrokerID() ).set( bo.getConversationsActive() );
 		}
+		req.closeConversation();
 	}
 }
