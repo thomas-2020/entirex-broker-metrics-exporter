@@ -1,6 +1,8 @@
 package com.softwareag.entirex.metrics;
 
 import com.softwareag.entirex.appmondc.DataCollectorCallback;
+import com.softwareag.entirex.traces.ApplicationMonitoringOTELTracer;
+
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,8 +61,10 @@ public class ApplicationMonitoringCallback implements DataCollectorCallback {
 
 	@Override
 	public void processEvent(Map<String, String> attributes) throws Exception {
-		String scenario = attributes.get( "AppMonScenario" );
-		if ( scenario != null && scenario.equals( "RPC" ) ) {
+		
+		ApplicationMonitoringOTELTracer.trace( attributes );
+		
+		if ( isRPCScenario( attributes ) ) {
 			//Copy metrics from DC to Prometheus
 			String broker  = getLabelBroker( attributes );
 			String service = getLabelService( attributes );
@@ -104,12 +108,18 @@ public class ApplicationMonitoringCallback implements DataCollectorCallback {
 				rpcTimeDBTransport.labels( broker, service, program ).inc( Double.valueOf( valueS ) );
 		}
 	}
-	private String getLabelBroker( Map<String, String> attributes ) {
+
+	public static boolean isRPCScenario( Map<String, String> attributes ) {
+		String scenario = attributes.get( "AppMonScenario" );
+		return scenario != null && scenario.equals( "RPC" );
+	}
+	public static String getLabelBroker( Map<String, String> attributes ) {
 		String back = attributes.get( "Address" );
 		int i = back.indexOf( "/" );
 		return back.substring( 0, i );
 	}
-	private String getLabelService( Map<String, String> attributes ) {
+
+	public static String getLabelService( Map<String, String> attributes ) {
 		String back = attributes.get( "ApplicationName" );
 		if ( back.startsWith( "RPC" ) ) {
 			//Cut of "RPC/service/CALLNAT" the service name
@@ -123,10 +133,10 @@ public class ApplicationMonitoringCallback implements DataCollectorCallback {
 		return back;
 	}
 	
-	private String getLabelProgram( Map<String, String> attributes ) {
+	public static String getLabelProgram( Map<String, String> attributes ) {
 		return attributes.get( "Program" );
 	}
-	private boolean hasError( Map<String, String> attributes ) {
+	public static boolean hasError( Map<String, String> attributes ) {
 		return attributes.get( "ErrorCode" ) != null;
 	}
 }

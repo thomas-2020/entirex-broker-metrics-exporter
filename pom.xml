@@ -69,6 +69,16 @@
       <artifactId>java-appmondc</artifactId>
       <version>${entirex-dependencies.version}</version>
     </dependency>
+	<dependency>
+	    <groupId>io.opentelemetry</groupId>
+	    <artifactId>opentelemetry-api</artifactId>
+	    <version>1.56.0</version>
+	</dependency>
+	<dependency>
+    	<groupId>io.opentelemetry.instrumentation</groupId>
+	    <artifactId>opentelemetry-spring-boot-starter</artifactId>
+	    <version>2.22.0</version>
+	</dependency>
   </dependencies>
 	<build>
 		<plugins>
