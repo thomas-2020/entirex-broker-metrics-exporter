@@ -136,7 +136,13 @@ public class ApplicationMonitoringCallback implements DataCollectorCallback {
 	public static String getLabelProgram( Map<String, String> attributes ) {
 		return attributes.get( "Program" );
 	}
+
 	public static boolean hasError( Map<String, String> attributes ) {
-		return attributes.get( "ErrorCode" ) != null;
+		return getError( attributes ) != null;
 	}
+
+	public static String getError( Map<String, String> attributes ) {
+		return attributes.get( "ErrorCode" );
+	}
+
 }
