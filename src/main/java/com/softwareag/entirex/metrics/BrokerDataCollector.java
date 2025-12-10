@@ -1,12 +1,9 @@
 package com.softwareag.entirex.metrics;
 
-import io.prometheus.client.Counter;
 import io.prometheus.client.Gauge;
 
 import java.util.HashMap;
 import java.util.StringTokenizer;
-
-import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
