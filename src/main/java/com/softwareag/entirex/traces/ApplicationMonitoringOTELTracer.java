@@ -12,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.softwareag.entirex.metrics.ApplicationMonitoringCallback;
-import com.softwareag.entirex.metrics.BrokerDataCollector;
 
 public class ApplicationMonitoringOTELTracer {
 
